@@ -1,0 +1,254 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        console.log(xhr);
+        console.log(status);
+        console.log(args);
+        if(args.validationFailed || !args.loggedIn) {
+            PF('PermisoUsuarioDialogCreate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            console.log("*")
+            PF('PermisoUsuarioDialogCreate').hide();
+            /*$('#RegistrarPermisosUsuariosBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        console.log(xhr);
+        console.log(status);
+        console.log(args);
+        if(args.validationFailed || !args.updatedIn) {
+            PF('PermisoUsuarioDialogUpdate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('PermisoUsuarioDialogUpdate').hide();
+            /*$('#RegistrarPermisosUsuariosBtn').fadeOut();*/
+        }
+    }
+    
+</script>
+
+
+<h:form id="PermisosUsuariosFormReadOnly">
+
+    <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                   
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+                           
+                                <!-- David no llamar la varibale como una que ya existe -->
+                                <!-- David ten cuidado con las mayusculas al inicio -->
+								<p:dataTable var="permisoUsuario" value="#{permisosUsuariosForm.listPermisosUsuarios}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+								     <f:facet name="header">
+								     Permisos Usuarios
+								     </f:facet>
+								    	<p:column headerText="Usuario:">
+								        <h:outputText value="#{permisoUsuario.numeroUsuario}" />
+								    </p:column>
+								    <p:column headerText="Comentarios:">
+								        <h:outputText value="#{permisoUsuario.comentarios}" />
+								    </p:column>
+								     <p:column headerText="Estatus:">
+								        <h:outputText value="#{permisoUsuario.estatus}" />
+								    </p:column>
+								     <p:column headerText="Opciones:">
+								       <p:commandButton icon="fa fa-edit" update="PermisosUsuariosFormUpdate" oncomplete="PF('PermisoUsuarioDialogUpdate').show();" ajax="true" style="margin-left: 15px;" actionListener="#{permisosUsuariosForm.selectForUpdate(permisoUsuario)}" />
+								       <p:commandButton icon="fa fa-trash" update=":PermisosUsuariosFormDelete:eliminar-permisoUsuario-dialog" oncomplete="PF('eliminarPermisoUsuarioDlg').show();" ajax="true" style="margin-left: 15px;" actionListener="#{permisosUsuariosForm.selectForDelete(permisoUsuario)}"/>                      
+								     </p:column>
+								     
+								    
+								</p:dataTable>
+                       </div>
+                      </div>
+                      
+                      <h:panelGroup id="permisosUsuarios-registrar">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarPermisosUsuariosBtn" value="Registrar Permisos Usuarios" icon="fa fa-plus" onclick="PF('PermisoUsuarioDialogCreate').show();" />
+                                </div>
+                            </div>
+                      </h:panelGroup>
+    </div>
+   </div>
+  </div>
+</h:form>
+
+
+<h:form id="PermisosUsuariosFormCreate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="permisoUsuario-dialog-create" widgetVar="PermisoUsuarioDialogCreate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Registrar Permiso Usuario">
+
+<p:panel id="panelCreate">
+
+<div class="ui-g ui-fluid">
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+<p:outputLabel value="Nombre Ubicacion" for="numero_ubicacion" /> 
+   <p:selectOneMenu id="numero_ubicacion" filter="true" filterMatchMode="contains" required="true" value="#{permisosUsuarios.numeroUbicacion}" >
+  <f:selectItem itemLabel="seleccione" itemValue="" /> 
+  <f:selectItems value="#{adminHelper.selectUbicacionesItems}"  />
+ </p:selectOneMenu>
+</div>
+
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel  for="numero_usuario" value="Usuario"/>
+   <p:selectOneMenu id="numero_usuario"  required="true" value="#{permisosUsuarios.numeroUsuario}">
+   <f:selectItem itemLabel="seleccione" itemValue="" /> 
+   <f:selectItems  value="#{adminHelper.selectUsuariosItems}" />
+  </p:selectOneMenu> 
+  <p:message for="numero_usuario"/>
+</div>
+
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel  for="numero_permiso" value="Permiso"/>
+   <p:selectOneMenu id="numero_permiso"  required="true" value="#{permisosUsuarios.numeroPermiso}" valueChangeListener="#{permisosUsuariosForm.permisoChangeEvent}"  >
+   <f:selectItem itemLabel="seleccione" itemValue="" /> 
+   <f:selectItems  value="#{adminHelper.selectPermisosItems}" />
+   <p:ajax update=":PermisosUsuariosFormCreate:numero_modulo :PermisosUsuariosFormCreate:numero_pantalla :PermisosUsuariosFormCreate:tipo_permiso"/>
+   </p:selectOneMenu> 
+  <p:message for="numero_permiso"/>
+</div>
+</div>
+
+<div class="ui-g ui-fluid">
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel  for="numero_modulo" value="Modulo"/>
+  <p:inputText id="numero_modulo" value="#{permisosUsuariosForm.strModulo}" readonly="true" />
+  <p:message for="numero_modulo"/>
+</div>
+
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel  for="numero_pantalla" value="Pantalla"/>
+  <p:inputText id="numero_pantalla" value="#{permisosUsuariosForm.strPantalla}" readonly="true"/>
+  <p:message for="numero_pantalla"/>
+</div>
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="tipo_permiso" value="Tipo Permiso" /> 
+  <p:inputText id="tipo_permiso" value="#{permisosUsuariosForm.strTipoPermiso}" readonly="true"/>
+   <p:message for="tipo_permiso" />
+</div>
+</div>
+
+<div class="ui-g ui-fluid">
+  <p:outputLabel for="comentarios" value="Comentarios:"/>
+  <p:inputTextarea id="comentarios"  value="#{permisosUsuarios.comentarios}" maxlength="200"/>
+  <p:message for="comentarios"/>
+</div>
+
+ <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{permisosUsuarios.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" required="true" value="#{permisosUsuarios.utilFechaUltimaActualizacion}" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>  
+   
+</p:panel>
+
+<div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true"  onclick="PF('PermisoUsuarioDialogCreate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" update="panelCreate PermisosUsuariosFormReadOnly" action="#{permisosUsuariosForm.insertPermisosUsuarios}" oncomplete="handleGuardarRequest(xhr, status, args)" />
+     </div>
+</div>
+
+</p:dialog>
+
+</h:form>
+
+
+<h:form id="PermisosUsuariosFormUpdate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="permisoUsuario-dialog-update" widgetVar="PermisoUsuarioDialogUpdate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Actualizar Permiso Usuario">
+
+<p:panel id="panelUpdate">
+
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="numero_usuario" value="Nombre Usuario:" /> 
+  <p:inputText id="numero_usuario" name="numero_usuario" style="width: 100%; margin-top: 5px;" value="#{permisosUsuariosForm.permisosUsuariosSelected.numeroUsuario}" required="true" maxlength="50"  />
+  <p:message for="numero_usuario" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="numero_modulo" value="Numero Modulo:" /> 
+  <p:inputText id="numero_modulo" name="numero_modulo" style="width: 100%; margin-top: 5px;" value="#{permisosForm.permisosSelected.numeroModulo}" required="true" maxlength="50"  />
+  <p:message for="numero_modulo" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel for="numero_pantalla" value="Pantalla"/>
+   <p:inputText id="numero_pantalla" style="width: 100%; margin-top: 5px;" value="#{permisosForm.permisosSelected.numeroPantalla}" maxlength="50"/>
+   <p:message for="numero_pantalla"/>
+  </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel for="tipo_permiso" value="Tipo Permiso"/>
+   <p:inputText id="tipo_permiso" style="width: 100%; margin-top: 5px;" value="#{permisosForm.permisosSelected.tipoPermiso}" maxlength="50"/>
+   <p:message for="tipo_permiso"/>
+  </div>
+</div>
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{permisosUsuariosForm.permisosUsuariosSelected.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+  </div>
+  </div>
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="true" immediate="true" onclick="PF('PermisoUsuarioDialogUpdate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" update="panelUpdate PermisosUsuariosFormReadOnly" action="#{permisosUsuariosForm.actualizaPermisosUsuarios}" oncomplete="handleActualizarRequest(xhr, status, args)" />
+      </div>
+  </div>
+</p:panel>
+
+</p:dialog>
+</h:form>
+
+
+<h:form id="PermisosUsuariosFormDelete">
+   <p:dialog id="eliminar-permisoUsuario-dialog" widgetVar="eliminarPermisoUsuarioDlg" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" header="Eliminar Permiso Usuario">
+
+				<div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            
+                            <p:outputLabel value="El permiso asignado al usuario #{permisosUsuariosForm.permisosUsuariosSelected.numeroPermisoUsuario} se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel  />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('eliminarPermisoUsuarioDlg').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":UbicacionesFormReadOnly"
+                                         actionListener="#{permisosUsuariosForm.delete}"
+                                         onstart="PF('eliminarPermisoUsuarioDlg').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+     </p:dialog>
+</h:form>
+
+
+
+</ui:define>
+
+</ui:composition> 

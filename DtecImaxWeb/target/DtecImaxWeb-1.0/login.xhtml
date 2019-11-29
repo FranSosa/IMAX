@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+	<title><ui:insert name="title">DtecImax Cloud</ui:insert></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputScript library="primefaces" name="jquery/jquery.js" />
+	<script>
+          $(document).ready(function() {
+        	  var  lfusername = document.getElementById("username"); 
+        	  lfusername.value = "x";
+        	  var  lfpassword = document.getElementById("password"); 
+        	  lfpassword.value = "x";
+           });
+     </script>
+	<style>
+		.packs-background {
+		  background-image: url("#{resource['apollo-layout:images/loginPacks.jpg']}");
+		  background-color: #000000;
+		  height: 520px;
+		  width: 100%;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: cover;
+		  position: relative;		  
+		}
+		
+		.packs-header1 {
+			text-align: center;
+			font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+			font-size: 30px;
+    		font-style: normal;
+    		color: #ffffff;
+		}
+
+		.packs-header2 {
+			text-align: center;
+			font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+			font-size: 17px;
+    		font-style: normal;
+    		color: #ffffff;
+		}
+
+		.center {
+		    margin: auto;
+		    width: 30%;		    
+		}
+		</style>
+		
+	</h:head>
+    <h:body styleClass="packs-background">
+     <f:view>
+		<div style="height: 48%"/>
+        <div class="center" >
+        			<div class="packs-header1">
+                    	<label>Bienvenidos</label>
+                    </div>
+                    <div class="packs-header2">
+                    	<label>Por favor inicie sesión para utilizar el sistema</label>
+                    </div>
+                     <div style="height: 10px"/>
+	                <h:form id="loginFormId" prependId="false" style="font-family:arial;">
+	                <f:passThroughAttribute name="autocomplete" value="off"/>
+	                
+	                    <f:metadata>
+	                        <f:event listener="#{loginForm.init}" type="preRenderView" />
+	                    </f:metadata>
+	                    
+	                    <div style="margin-bottom: 15px">
+                            <div>
+                            	<label style="color: #ffffff;">Usuario</label>
+                            </div>
+                            <div>
+                            	<h:inputText id="username" name="username" tabindex="1" style="margin: 0 0 .5rem 0;height:22px;width:100%" required="true" requiredMessage="Porfavor ingresar tu usuario." />
+                            	<h:message style="color:red;" for="username"/>
+                            </div>
+	                    </div>	              
+	                    <div style="margin-bottom: 15px">
+                            
+                            <div>
+                            	<label style="color: #ffffff;">Contraseña</label>
+                            </div>
+                            <div>
+                            	<h:inputSecret id="password" name="password" tabindex="2" style="margin: 0 0 .5rem 0;height:22px;width:100%" required="true" requiredMessage="Porfavor ingresar tu password."  />
+                            	<h:message style="color:red;" for="password"/>
+                            </div>
+	                    </div>
+	                    <div style="margin-bottom: 20px">
+                            <div>
+                               <p:messages id="msgs" globalOnly="true" showSummary="false" showDetail="true" redisplay="false" autoUpdate="true" />
+                               <h:commandButton id="btnLoginId" value="Iniciar sesión" type="submit" action="#{loginForm.doLogin}"  class="ui-g-6" style="background-color: #F6A821;padding-right: 25px;font-size: 14px;" />
+                            </div>
+                        </div>
+                    </h:form>
+        </div>
+        </f:view>     
+    </h:body>
+</html>

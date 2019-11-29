@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+ <h:form id="FiltrosForm">
+  <p:panel id="FiltrosPanel">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12 ui-md-3 ui-lg-3">
+        <p:outputLabel for="fechaDesde" value="Fecha Desde" />
+        <p:calendar id="fechaDesde"  pattern="dd/MM/yyyy" mask="true" required="true" locale="es" navigator="true" value="#{estudiosAgendadosForm.fechaDesde}"/>
+        <p:message for="fechaDesde"/>
+      </div>
+       <div class="ui-g-12 ui-md-3 ui-lg-3">
+         <p:outputLabel for="fechaHasta" value="Fecha Hasta" />
+         <p:calendar id="fechaHasta" pattern="dd/MM/yyyy" mask="true" required="true" locale="es" navigator="true" value="#{estudiosAgendadosForm.fechaHasta}"/>
+         <p:message for="fechaHasta"/>
+      </div>
+    </div>  
+  </p:panel>
+   <div class="ui-g">
+      <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: left;">
+       <p:commandButton value="Consultar" update="FiltrosPanel ReadOnlyForm" action="#{estudiosAgendadosForm.filtraPorFechas()}" oncomplete="$('.ui-message-error').delay(1800).fadeOut(500);"/>
+      </div>
+   </div>
+</h:form> 
+ 
+ <h:form id="ReadOnlyForm">
+ <p:chart type="bar" model="#{estudiosAgendadosForm.barModelOrdenesSimples}" style="height:300px"/>
+ <p:chart type="bar" model="#{estudiosAgendadosForm.barModelOrdenesEspeciales}" style="height:300px"/>
+ <p:chart type="bar" model="#{estudiosAgendadosForm.barModelOrdenesContrastados}" style="height:300px"/>
+ <p:chart type="bar" model="#{estudiosAgendadosForm.barModelOrdenesDentales}" style="height:300px"/>
+ </h:form>
+</ui:define>
+</ui:composition>

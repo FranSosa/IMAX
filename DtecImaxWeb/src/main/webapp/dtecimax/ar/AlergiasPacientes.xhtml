@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('AlergiasPacientesDialogCreate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('AlergiasPacientesDialogCreate').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.updatedIn) {
+            PF('AlergiasPacientesDialogUpdate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('AlergiasPacientesDialogUpdate').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }    
+</script>
+
+<h:form id="AlergiasPacientesFormReadOnly">
+    <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                   
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+                           
+								<p:dataTable var="alergia" value="#{alergiasPacientesForm.listAlergiasPacientes}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+								     <f:facet name="header">
+								      Alergias
+								     </f:facet>
+								      <p:column headerText="Nombre Alergia:">
+								        <h:outputText value="#{alergia.nombreAlergia}" />
+								    </p:column>
+								     <p:column headerText="Descripcion Alergia:">
+								        <h:outputText value="#{alergia.descripcion}" />
+								    </p:column>
+								    <p:column headerText="Opciones:">
+								       <p:commandButton icon="fa fa-edit" update="AlergiasPacientesFormUpdate AlergiasPacientesFormReadOnly" oncomplete="PF('AlergiasPacientesDialogUpdate').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{alergiasPacientesForm.selectForUpdate(alergia)}"/>
+								       <p:commandButton icon="fa fa-trash" update=":AlergiasPacientesFormDelete:eliminar-alergiasPacientes-dialog" oncomplete="PF('eliminarAlergiasPacientesDlg').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{alergiasPacientesForm.selectForDelete(alergia)}"/>                      
+								     </p:column>
+								 </p:dataTable>
+						   </div>
+						   </div>
+						   
+						    <h:panelGroup id="alergiasPacientes-registrar">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarAlergiasPacientesBtn" value="Registrar Alergia Paciente" icon="fa fa-plus" onclick="PF('AlergiasPacientesDialogCreate').show();" />
+                                </div>
+                            </div>
+                           </h:panelGroup>
+   </div>
+   </div>
+   </div>
+   						   
+</h:form>
+
+<h:form id="AlergiasPacientesFormCreate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="alergiasPacientes-dialog-create" widgetVar="AlergiasPacientesDialogCreate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Modificar Alergia Paciente">
+<p:panel id="panelCreate">
+<div class="ui-g ui-fluid">
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="nombre_alergia" value="Nombre Alergia:" />
+  <p:inputText id="nombre_alergia" name="nombre_alergia" style="width: 100%; margin-top: 5px;" value="#{alergiasPacientes.nombreAlergia}" required="true" maxlength="50"  />
+  <p:message for="nombre_alergia" />
+</div>
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="descripcion_alergia" value="Descripcion Alergia:" />
+  <p:inputText id="descripcion_alergia" name="descripcion_alergia" style="width: 100%; margin-top: 5px;" value="#{alergiasPacientes.descripcion}" required="true" maxlength="50"  />
+  <p:message for="descripcion_alergia" />
+</div>
+</div>
+</p:panel>
+
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true" onclick="PF('AlergiasPacientesDialogCreate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" update="panelCreate AlergiasPacientesFormReadOnly" action="#{alergiasPacientesForm.insertaAlergiaPaciente}"  oncomplete="handleGuardarRequest(xhr, status, args)" />
+     </div>
+  </div>
+
+</p:dialog>
+</h:form>
+
+<h:form id="AlergiasPacientesFormUpdate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="alergiasPacientes-dialog-update" widgetVar="AlergiasPacientesDialogUpdate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Modificar Alergia Paciente">
+
+ <p:panel id="panelUpdate">
+<div class="ui-g ui-fluid">
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="nombre_alergia" value="Nombre Alergia:" />
+  <p:inputText id="nombre_alergia" name="nombre_alergia" style="width: 100%; margin-top: 5px;" value="#{alergiasPacientesForm.alergiasPacientesSelected.nombreAlergia}" required="true" maxlength="50"  />
+  <p:message for="nombre_alergia" />
+</div>
+<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="descripcion_alergia" value="Descripcion Alergia:" />
+  <p:inputText id="descripcion_alergia" name="descripcion_alergia" style="width: 100%; margin-top: 5px;" value="#{alergiasPacientesForm.alergiasPacientesSelected.descripcion}" required="true" maxlength="50"  />
+  <p:message for="descripcion_alergia" />
+</div>
+</div>
+</p:panel>
+
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true" onclick="PF('AlergiasPacientesDialogUpdate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" update="panelUpdate AlergiasPacientesFormReadOnly" action="#{alergiasPacientesForm.updateAlergiasPacientes}"  oncomplete="handleActualizarRequest(xhr, status, args)" />
+     </div>
+  </div>
+ 
+
+</p:dialog>
+</h:form>
+
+<h:form id="AlergiasPacientesFormDelete">
+<p:dialog id="eliminar-alergiasPacientes-dialog" widgetVar="eliminarAlergiasPacientesDlg" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Eleminar Alergia Paciente">
+                  <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            <p:outputLabel value="La alergia #{alergiasPacientesForm.alergiasPacientesSelected.nombreAlergia} se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('eliminarAlergiasPacientesDlg').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":AlergiasPacientesFormReadOnly"
+                                         actionListener="#{alergiasPacientesForm.deleteAlergiasPacientes}"
+                                         onstart="PF('eliminarAlergiasPacientesDlg').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+</p:dialog>
+</h:form>
+
+</ui:define>
+</ui:composition>

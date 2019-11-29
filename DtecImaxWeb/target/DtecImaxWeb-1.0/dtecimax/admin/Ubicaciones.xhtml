@@ -1,0 +1,259 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('UbicacionDialog').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('UbicacionDialog').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.updatedIn) {
+            PF('UbicacionDialogUpdate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('UbicacionDialogUpdate').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }    
+</script>
+
+
+<h:form id="UbicacionesFormReadOnly">
+
+    <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                   
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+                           
+								<p:dataTable var="ubicacion" value="#{ubicacionesForm.listUbicaciones}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+								     <f:facet name="header">
+								      Ubicaciones
+								     </f:facet>
+								    <p:column headerText="Nombre Ubicacion:">
+								        <h:outputText value="#{ubicacion.nombreUbicacion}" />
+								    </p:column>
+								    <p:column headerText="Domicilio Ubicacion:">
+								        <h:outputText value="#{ubicacion.domicilioUbicacion}" />
+								    </p:column>
+								    <p:column headerText="Correo Ubicacion:">
+								        <h:outputText value="#{ubicacion.correoUbicacion}" />
+								    </p:column>
+								     <p:column headerText="Telefono Ubicacion:">
+								        <h:outputText value="#{ubicacion.telefonoUbicacion}" />
+								    </p:column>
+								     <p:column headerText="Horario Ubicacion:">
+								        <h:outputText value="#{ubicacion.horarioUbicacion}" />
+								    </p:column>
+								     <p:column headerText="Comentarios Ubicacion:">
+								        <h:outputText value="#{ubicacion.comentarios}" />
+								    </p:column>
+								     <p:column headerText="Estatus:">
+								        <h:outputText value="#{ubicacion.estatusDes}" />
+								    </p:column>
+								     <p:column headerText="Opciones:">
+								       <p:commandButton icon="fa fa-edit" update="UbicacionesFormUpdate UbicacionesFormReadOnly" oncomplete="PF('UbicacionDialogUpdate').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{ubicacionesForm.selectForUpdate(ubicacion)}"/>
+								       <p:commandButton icon="fa fa-trash" update=":UbicacionesFormDelete:eliminar-ubicacion-dialog" oncomplete="PF('eliminarUbicacionDlg').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{ubicacionesForm.selectForDelete(ubicacion)}"/>                      
+								     </p:column>
+								</p:dataTable>
+                       </div>
+                      </div>
+                      
+                      <h:panelGroup id="ubicaciones-registrar">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarUbicacionBtn" value="Registrar Ubicacion" icon="fa fa-plus" onclick="PF('UbicacionDialog').show();" />
+                                </div>
+                            </div>
+                      </h:panelGroup>
+    </div>
+   </div>
+  </div>
+</h:form>
+
+
+<h:form id="UbicacionesFormCreate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+
+ <p:dialog id="ubicacion-dialog" widgetVar="UbicacionDialog" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Registrar Ubicacion">
+
+<p:panel id="panelCreate">
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="nombre_ubicacion" value="Nombre Ubicacion:" />
+  <p:inputText id="nombre_ubicacion" name="nombre_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicaciones.nombreUbicacion}" required="true" maxlength="50"  />
+  <p:message for="nombre_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="domicilio_ubicacion" value="Domicilio Ubicacion:" />
+  <p:inputText id="domicilio_ubicacion" name="domicilio_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicaciones.domicilioUbicacion}" required="true" maxlength="50"  />
+  <p:message for="domicilio_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="correo_ubicacion" value="Correo Ubicacion:" />
+  <p:inputText id="correo_ubicacion" name="correo_ubicacion"  style="width: 100%; margin-top: 5px;" value="#{ubicaciones.correoUbicacion}" required="true" maxlength="50" />
+  <p:message for="correo_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="telefono_ubicacion" value="Telefono Ubicacion:" />
+  <p:inputText id="telefono_ubicacion" name="telefono_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicaciones.telefonoUbicacion}" required="true" maxlength="50" />
+  <p:message for="telefono_ubicacion" />
+ </div>
+</div>
+
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel for="horario_ubicacion" value="Horario Ubicacion:" />
+ <p:inputText id="horario_ubicacion" name="horario_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicaciones.horarioUbicacion}" required="true" maxlength="25" />
+ <p:message for="horario_ubicacion" />
+ </div> 
+</div>
+
+<div class="ui-g ui-fluid">
+<p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{ubicaciones.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+</div>
+
+   <h:inputHidden id="estatus" name="status" value="#{ubicaciones.estatus}" />
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{ubicaciones.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ubicaciones.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>  
+</p:panel>
+
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true" onclick="PF('UbicacionDialog').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" update="panelCreate UbicacionesFormReadOnly" action="#{ubicacionesForm.insertaUbicacion}"  oncomplete="handleGuardarRequest(xhr, status, args)" />
+     </div>
+  </div>
+
+</p:dialog>
+</h:form>
+
+
+<h:form id="UbicacionesFormUpdate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+
+ <p:dialog id="ubicacion-dialog-update" widgetVar="UbicacionDialogUpdate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Modificar Ubicacion">
+
+<p:panel id="panelUpdate">
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="nombre_ubicacion" value="Nombre Ubicacion:" /> 
+  <p:inputText id="nombre_ubicacion" name="nombre_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.nombreUbicacion}" required="true" maxlength="50"  />
+  <p:message for="nombre_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="domicilio_ubicacion" value="Domicilio Ubicacion:" />
+  <p:inputText id="domicilio_ubicacion" name="domicilio_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.domicilioUbicacion}" required="true" maxlength="50"  />
+  <p:message for="domicilio_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="correo_ubicacion" value="Correo Ubicacion:" />
+  <p:inputText id="correo_ubicacion" name="correo_ubicacion"  style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.correoUbicacion}" required="true" maxlength="50" />
+  <p:message for="correo_ubicacion" />
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="telefono_ubicacion" value="Telefono Ubicacion:" />
+  <p:inputText id="telefono_ubicacion" name="telefono_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.telefonoUbicacion}" required="true" maxlength="50" />
+  <p:message for="telefono_ubicacion" />
+ </div>
+</div>
+
+<div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+ <p:outputLabel for="horario_ubicacion" value="Horario Ubicacion:" />
+ <p:inputText id="horario_ubicacion" name="horario_ubicacion" style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.horarioUbicacion}" required="true" maxlength="25" />
+ <p:message for="horario_ubicacion" />
+ </div> 
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="estatusUpd" value="Estatus"/>
+  <p:selectBooleanCheckbox id="estatusUpd" style="width: 100%; margin-top: 5px;" value="#{ubicacionesForm.ubicacionesSelected.estatus}" />
+  <p:message for="estatusUpd" />
+ </div> 
+  
+</div>
+
+<div class="ui-g ui-fluid">
+<p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{ubicacionesForm.ubicacionesSelected.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+</div>
+
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{ubicacionesForm.ubicacionesSelected.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ubicacionesForm.ubicacionesSelected.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+  
+</p:panel>
+
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="true" immediate="true" onclick="PF('UbicacionDialogUpdate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" ajax="true" update="panelUpdate UbicacionesFormReadOnly" action="#{ubicacionesForm.actualizaUbicacion}"  oncomplete="handleActualizarRequest(xhr, status, args)" />
+     </div>
+  </div>
+
+</p:dialog>
+</h:form>
+
+
+
+<h:form id="UbicacionesFormDelete">
+
+            <p:dialog id="eliminar-ubicacion-dialog" widgetVar="eliminarUbicacionDlg" modal="true" closable="true"
+                      closeOnEscape="true" draggable="false" resizable="false" header="Eliminar Ubicacion">
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            <p:outputLabel value="La ubicacion #{ubicacionesForm.ubicacionesSelected.nombreUbicacion} se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('eliminarUbicacionDlg').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":UbicacionesFormReadOnly"
+                                         actionListener="#{ubicacionesForm.delete}"
+                                         onstart="PF('eliminarUbicacionDlg').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+
+            </p:dialog>
+            
+</h:form>
+            
+
+</ui:define>
+
+</ui:composition>

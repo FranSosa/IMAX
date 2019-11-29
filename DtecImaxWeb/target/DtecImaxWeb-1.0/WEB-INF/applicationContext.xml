@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:jee="http://www.springframework.org/schema/jee" 
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/security 
+                           http://www.springframework.org/schema/security/spring-security.xsd 
+                           http://www.springframework.org/schema/jee
+                           http://www.springframework.org/schema/jee/spring-jee.xsd 
+                           http://www.springframework.org/schema/task 
+                           http://www.springframework.org/schema/task/spring-task.xsd">
+   
+   <bean id="myAuthenticationDetailsSource"
+       class="com.dtecimax.spring.security.MyAuthenticationDetailsSource">
+    </bean>
+    <!-- Inicio. Para manejar token caducado. RuGI-->
+    <bean id="customAccessDeniedHandler"
+         class="com.dtecimax.spring.security.CustomAccessDeniedHandler">
+    </bean>
+    <!-- Fin.  para manejar token caducado. RuGI-->
+    <bean id="myAuthenticationProvider"
+       class="com.dtecimax.spring.security.MyAuthenticationProvider">
+    </bean>
+    
+    <!-- Inicio create a custom AuthenticationProvider class to tune the login process -->
+     <security:authentication-manager>
+        <security:authentication-provider ref="myAuthenticationProvider"/>
+    </security:authentication-manager>
+    <!-- Fin create a custom AuthenticationProvider class to tune the login process -->
+        
+    
+       <security:http use-expressions="true">
+
+        <security:intercept-url pattern="/login*" access="permitAll"/>
+        <security:intercept-url pattern="/timeout*" access="permitAll"/>
+         
+        <security:intercept-url pattern="/dtecimax/**"
+                                access="hasAnyRole('ROLE_ADMIN','ROLE_PACS_ADMIN','ROLE_PACS_USER','ROLE_PACS_USER_BASIC','ROLE_RIS_ADMIN','ROLE_RIS_USER_ADVANCED', 'ROLE_RIS_USER_BASIC')"/>
+
+        <security:intercept-url pattern="/*" access="denyAll"/>
+        <security:intercept-url pattern="/faces/tester.xhtml*" access="hasAnyRole('ROLE_ADMIN','ROLE_PACS_ADMIN','ROLE_PACS_USER','ROLE_PACS_USER_BASIC','ROLE_RIS_ADMIN','ROLE_RIS_USER_ADVANCED', 'ROLE_RIS_USER_BASIC')"/>
+ 
+        <security:form-login
+            login-processing-url="/login"
+            login-page="/faces/login.xhtml"
+            authentication-failure-url="/faces/login.xhtml?error=1"
+            default-target-url="/faces/tester.xhtml"
+            always-use-default-target="true"
+            authentication-details-source-ref="myAuthenticationDetailsSource"
+            username-parameter="username"
+            password-parameter="password"/>
+
+        <security:logout
+            logout-url="/logout"
+            logout-success-url="/faces/login.xhtml"
+            invalidate-session="true"
+            delete-cookies="JSESSIONID"/>
+
+        <security:session-management>
+            <security:concurrency-control max-sessions="1"/>
+        </security:session-management>
+         <security:csrf disabled="true"/>
+        <security:access-denied-handler ref="customAccessDeniedHandler"/>
+    </security:http>
+                            
+</beans>

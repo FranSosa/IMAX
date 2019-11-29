@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+  <h:form id="NuevoTablUtilValo">
+   <f:passThroughAttribute name="autocomplete" value="off"/>
+     <p:panel>    
+     <div class="ui-g">
+      <div class="ui-g-12 ui-lg-4">
+     <p:commandButton immediate="true" title="Buscar"  value="Buscar" icon="fa fa-search" onclick="PF('BuscarTablUtilValoDialogWV').show();"/>
+     </div>
+     <div class="ui-g-12 ui-lg-4">
+     <p:commandButton immediate="true" title="Nuevo"  value="Nuevo" icon="fa fa-plus" actionListener="#{tablasUtilitariasValoresForm.nuevo()}" update="NuevoTablUtilValo"/>
+     </div>
+     <div class="ui-g-12 ui-lg-4">
+     <p:commandButton  title="Guardar" value="Guardar" icon="fa fa-save" actionListener="#{tablasUtilitariasValoresForm.guardar()}" update="NuevoTablUtilValo"/>
+     </div>
+     </div>   
+     <div class="ui-g">
+     <p:outputLabel for="tipo" value="Tipo Tabla"/>
+     <p:inputText id="tipo" required="true" requiredMessage="Requerido" value="#{tablasUtilitariasValoresForm.tipoTabla}"/>
+     <p:message for="tipo"/>
+     </div>
+     </p:panel>
+     
+     <p:dataTable var="tabUtilVal" value="#{tablasUtilitariasValoresForm.listTabUtilVal}" editable="true" editMode="cell" widgetVar="DataTableUtilValoWV" >
+        <p:column headerText="Codigo">
+          <p:inputText id="codigoInput" value="#{tabUtilVal.codigoTabla}" required="true" requiredMessage="Requerido"/>
+          <p:message for="codigoInput"/>
+         </p:column>
+         <p:column headerText="Significado">
+            <p:inputText id="significadoInput" value="#{tabUtilVal.significado}" required="true"  requiredMessage="Requerido"/>
+             <p:message for="significadoInput"/>
+        </p:column>
+         <p:column headerText="Descripcion">
+                <p:inputText id="descripcionInput" value="#{tabUtilVal.descripcion}"/>
+                 <p:message for="descripcionInput"/>
+        </p:column>
+         <p:column headerText="Fecha Effectiva Desde">
+              <p:calendar id="fechaEfectivaDesdeInput" value="#{tabUtilVal.fechaEfectivaDesde}" locale="es" pattern="dd/MM/yyyy" mask="true" required="true"  requiredMessage="Requerido"/>
+              <p:message for="fechaEfectivaDesdeInput"/>
+        </p:column>
+         <p:column headerText="Fecha Effectiva Hasta">
+           <p:calendar id="fechaEfectivaHastaInput" value="#{tabUtilVal.fechaEfectivaHasta}" locale="es" pattern="dd/MM/yyyy" mask="true" />
+           <p:message for="fechaEfectivaHastaInput"/>
+        </p:column>
+        <p:column headerText="Estado">
+            <p:selectBooleanCheckbox id="estadoInput" value="#{tabUtilVal.estado}" />
+        </p:column>
+     </p:dataTable>
+     
+     <div class="ui-g">
+         <div class="ui-g-12">
+             <p:commandButton value="Agregar Linea" styleClass="ui-priority-primary" update="NuevoTablUtilValo"
+                              action="#{tablasUtilitariasValoresForm.agregarLinea()}" />
+         </div>
+     </div>
+     
+      <p:remoteCommand name="anterior" update="NuevoTablUtilValo" action="#{tablasUtilitariasValoresForm.registroAnterior()}" />
+      <p:remoteCommand name="siguiente" update="NuevoTablUtilValo" action="#{tablasUtilitariasValoresForm.registroSiguiente()}" />
+ 
+     
+  </h:form>
+  
+  <h:form id="BuscarTablUtilValo">
+   <f:passThroughAttribute name="autocomplete" value="off"/>
+   <p:dialog id="BuscarTablUtilValoDialogId" header="Buscar Tipo Tabla" widgetVar="BuscarTablUtilValoDialogWV" modal="true">
+       <p:panel id="panelBuscar">
+       <div class="ui-g">
+       <div class="ui-g-12 ui-sm-12 ui-md-6 ui-lg-6">
+             <p:outputLabel for="tipoTabla" value="Nombre Tipo Tabla"/>
+	         <p:inputText id="tipoTabla" value="#{tablasUtilitariasValoresForm.buscarTipoTabla}"  />
+	         <p:message for="tipoTabla"/>      
+       </div>
+       </div>
+        <div class="ui-g">
+        <div class="ui-g-12 ui-sm-12 ui-md-6 ui-lg-6">
+        <p:commandButton value="Buscar"  update="NuevoTablUtilValo" actionListener="#{tablasUtilitariasValoresForm.buscar()}" oncomplete="PF('BuscarTablUtilValoDialogWV').hide();" /> 
+        </div>
+         <div class="ui-g-12 ui-sm-12 ui-md-6 ui-lg-6">
+        <p:commandButton value="Cancelar" type="reset" update="panelBuscar"   onclick="PF('BuscarTablUtilValoDialogWV').hide();" /> 
+        </div>
+        </div>
+       </p:panel>
+   </p:dialog> 
+  </h:form>
+  
+</ui:define>
+
+</ui:composition>

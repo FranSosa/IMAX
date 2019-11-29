@@ -1,0 +1,37 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/apollo"
+    xmlns:security="http://www.springframework.org/security/tags">
+
+ <div class="topbar clearfix" style= "margin:0;padding:0;">
+
+        <a style= "margin-top: 0.5px;" id="menu-button" href="#">
+            <i class="fa fa-align-left"></i>
+        </a>
+        <p:graphicImage class="logo" style= "height: 50px;"  library="apollo-layout" name="images/apollo_logo.png"/>
+        <a href="#" class="profile" style= "margin-top: 1.5px;">
+            <span class="username">Usuario:#{sessionScope['svUserName']}</span>
+
+            <i class="fa fa-angle-down"></i>
+        </a>
+        
+         <ul class="topbar-menu fadeInDown">
+           <li role="menuitem">
+                <h:form>
+                    <p:commandLink action="#{loginForm.doLogout}" ajax="false">
+                        <i class="fa fa-fw fa-sign-out"></i>
+                        <span>Salir</span>
+                    </p:commandLink>
+
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </h:form>
+            </li>
+         </ul>
+        
+ </div>
+     
+</ui:composition>

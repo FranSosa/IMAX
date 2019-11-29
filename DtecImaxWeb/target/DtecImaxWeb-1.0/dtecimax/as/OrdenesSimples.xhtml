@@ -1,0 +1,395 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('OrdenSimpleDialog').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('OrdenSimpleDialog').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        console.log(args);
+        if(args.validationFailed || !args.updatedIn) {
+            PF('OrdenSimpleUpdateDialog').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('OrdenSimpleUpdateDialog').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+    
+</script>
+
+<h:form id="MessagesForm">
+  <p:messages id="messages" showDetail="true" closable="true">
+        <p:autoUpdate />
+    </p:messages>
+</h:form>
+
+<h:form id="SearchForm">
+ <f:passThroughAttribute name="autocomplete" value="off"/>
+  <p:fieldset legend="Buscar Orden Simple" toggleable="true" toggleSpeed="500" style="margin-bottom:20px" collapsed="true" >
+  <p:ajax event="toggle" />
+  <p:panel id="SearchPanel" >
+      <div class="ui-g ui-fluid">
+       <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+        <p:outputLabel  for="numero_estudio" value="Numero Estudio:" />
+         <p:inputText id="numero_estudio"  style="width: 100%; margin-top: 5px;" value="#{ordenesSimplesForm.searchNumEstu}" maxlength="50" />
+         <p:message for="numero_estudio"/>
+      </div>
+      <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+        <p:outputLabel  for="nombre_paciente" value="Nombre Paciente:" />
+         <p:inputText id="nombre_paciente"  style="width: 100%; margin-top: 5px;" value="#{ordenesSimplesForm.searchNomPaci}" maxlength="50" />
+         <p:message for="nombre_paciente"/>
+      </div>
+      <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+        <p:outputLabel  for="nombre_doctor" value="Nombre Doctor:" />
+         <p:inputText id="nombre_doctor"  style="width: 100%; margin-top: 5px;" value="#{ordenesSimplesForm.searchNomDoct}" maxlength="50" />
+         <p:message for="nombre_doctor"/>
+      </div>
+      </div>
+      
+      <div class="ui-g">
+       <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+        <p:commandButton value="Cancelar">
+         <p:ajax update="SearchPanel" resetValues="true" />
+        </p:commandButton>
+        <p:commandButton value="Consultar" update="OrdenesSimplesFormReadOnly"  actionListener="#{ordenesSimplesForm.search}" style="margin-left: 10px;"/>
+       </div>
+      </div>
+      
+  </p:panel>
+  </p:fieldset>
+</h:form>
+  
+
+<h:form id="OrdenesSimplesFormReadOnly">
+    <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                   
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+                           
+							 <p:dataTable var="ordenSimple" value="#{ordenesSimplesForm.listOrdenesEstudiosSimples}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+							   <f:facet name="header">
+								  Ordenes Simples
+						       </f:facet>
+						       <p:column headerText="Numero Estudio">
+								   <h:outputText value="#{ordenSimple.numeroOrden}" />
+								</p:column>
+						        <p:column headerText="Nombre Paciente">
+								        <h:outputText value="#{ordenSimple.nombrePaciente}" />
+								</p:column>
+								 <p:column headerText="Nombre Doctor">
+								        <h:outputText value="#{ordenSimple.nombreDoctor}" />
+								</p:column>
+								 <p:column headerText="Nombre Ubicacion">
+								        <h:outputText value="#{ordenSimple.nombreUbicacion}" />
+								</p:column>
+								<p:column headerText="Horario">
+								     <h:outputText value="#{ordenSimple.horaInicialOrden}" >
+								      <f:convertDateTime pattern="HH:mm" />
+								     </h:outputText>-
+								     <h:outputText value="#{ordenSimple.horaFinalOrden}">
+								     <f:convertDateTime pattern="HH:mm" />
+								     </h:outputText>
+								</p:column>
+								 <p:column headerText="Opciones:">
+								       <p:commandButton icon="fa fa-edit" update="OrdenesSimplesFormUpdate OrdenesSimplesFormReadOnly" oncomplete="PF('OrdenSimpleUpdateDialog').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{ordenesSimplesForm.selectForUpdate(ordenSimple)}"/>
+								       <p:commandButton icon="fa fa-trash" update=":OrdenesSimplesFormDelete:ordenSimpleDelete-dialog" oncomplete="PF('OrdenSimpleDeleteDialog').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{ordenesSimplesForm.selectForDelete(ordenSimple)}"/>                      
+								     </p:column>
+                             </p:dataTable>
+                             </div>
+                             </div>
+                      <h:panelGroup id="ordenesSimples-registrar">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarOrdenesSimplesBtn" value="Registrar Orden Simple" icon="fa fa-plus" onclick="PF('OrdenSimpleDialog').show();" />
+                                </div>
+                            </div>
+                      </h:panelGroup>
+   </div>
+   </div>
+   </div>                          
+</h:form>
+
+<h:form id="OrdenesSimplesFormCreate">
+ <p:dialog id="ordenSimple-dialog" widgetVar="OrdenSimpleDialog" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Registrar Orden Simple">
+
+<p:panel id="panelCreate">
+ <div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel value="Nombre Paciente" for="numero_paciente" /> 
+  <p:selectOneMenu id="numero_paciente" filter="true" filterMatchMode="contains" required="true" value="#{ordenesEstudiosSimples.numeroPaciente}" >
+  <f:selectItem itemLabel="seleccione" itemValue="" /> 
+  <f:selectItems value="#{adminHelper.selectPacientesItems}"  />
+  <p:ajax event="change" update="edad fecha_de_nacimiento" listener="#{ordenesSimplesForm.handlePacienteChange}"/>
+ </p:selectOneMenu>
+ <p:message for="numero_paciente"/>
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="edad" value="Edad"/>
+  <p:inputText id="edad" value="#{ordenesSimplesForm.edad}" readonly="true"/>
+  <p:message for="edad"/>
+ </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="fecha_de_nacimiento" value="Fecha de Nacimiento"/>
+  <p:inputText id="fecha_de_nacimiento" value="#{ordenesSimplesForm.fechaNacimiento}" readonly="true">
+  <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+  </p:inputText>
+  <p:message for="fecha_de_nacimiento"/>
+  </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+   <p:outputLabel value="Nombre Doctor" for="numero_doctor" /> 
+   <p:selectOneMenu id="numero_doctor" filter="true" filterMatchMode="contains" required="true" value="#{ordenesEstudiosSimples.numeroDoctor}" >
+   <f:selectItem itemLabel="seleccione" itemValue="" /> 
+   <f:selectItems value="#{adminHelper.selectDoctoresItems}"  />
+   </p:selectOneMenu>
+   <p:message for="numero_doctor"/>
+ </div>
+</div>
+ <div class="ui-g ui-fluid">
+ 
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  		<p:outputLabel value="Nombre Estudio" for="numero_estudio" /> 
+  		<p:selectOneMenu id="numero_estudio" filter="true" filterMatchMode="contains" required="true" value="#{ordenesEstudiosSimples.numeroEstudio}" >
+  		<f:selectItem itemLabel="seleccione" itemValue="" /> 
+  		<f:selectItems value="#{adminHelper.selectEstudiosItems}"/>
+  		<p:ajax event="change" update="costo_estudio" listener="#{ordenesSimplesForm.handleEstudioChange}"/>
+ 		</p:selectOneMenu>
+ 		<p:message for="numero_estudio"/>
+  	</div>
+	<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  		<p:outputLabel for="costo_estudio" value="Costo de Estudio"/>
+  		<p:inputText id="costo_estudio" value="#{ordenesSimplesForm.costoEstudio}" readonly="true">
+  		</p:inputText>
+  		<p:message for="costo_estudio"/>
+  	</div>
+ 
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Nombre Ubicacion" for="numero_ubicacion" /> 
+	<p:selectOneMenu id="numero_ubicacion" filter="true" filterMatchMode="contains" required="true" value="#{ordenesEstudiosSimples.numeroUbicacion}" >
+	<f:selectItem itemLabel="seleccione" itemValue="" /> 
+	<f:selectItems value="#{adminHelper.selectUbicacionesItems}"  />
+	</p:selectOneMenu>
+	<p:message for="numero_ubicacion"/>
+  </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Tipo de Pago" for="tipo_pago" /> 
+    <p:selectOneMenu id="tipo_pago"  required="true" value="#{ordenesEstudiosSimples.tipoPago}" >
+	<f:selectItem itemLabel="seleccione" itemValue="" /> 
+	<f:selectItems value="#{adminHelper.selectTipoPagoItems}"  />
+	</p:selectOneMenu>
+	<p:message for="tipo_pago"/>
+  </div>
+  
+ </div>
+ 
+ <div class="ui-g ui-fluid">
+   <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+      <p:outputLabel value="Hora Inicial" for="horaInicialOrden" />
+      <pe:timePicker id="horaInicialOrden" style="width: 100%; margin-top: 5px;" mode="popup"  required="true" widgetVar="horaInicialOrdenWidget" value="#{ordenesEstudiosSimples.utilHoraInicialOrden}" startHours="8" endHours="20" minHour="8" maxHour="20"/>
+      <p:message for="horaInicialOrden"/>
+   </div>
+   <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+      <p:outputLabel value="Hora Final" for="horaFinalOrden" />
+      <pe:timePicker id="horaFinalOrden" style="width: 100%; margin-top: 5px;" mode="popup"  required="true" widgetVar="horaFinalOrdenWidget" value="#{ordenesEstudiosSimples.utilHoraFinalOrden}" startHours="8" endHours="20" minHour="8" maxHour="20"/>
+      <p:message for="horaFinalOrden"/>
+   </div>
+   <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Requiere Factura" for="requiere_factura" />
+    <p:selectBooleanCheckbox id="requiere_factura" style="width: 100%; margin-top: 5px;" value="#{ordenesEstudiosSimples.requiereFactura}" />
+    <p:message for="requiere_factura"/>
+  </div>
+ </div>
+ 
+<div class="ui-g ui-fluid">
+<p:outputLabel for="info_adicional" value="Info Adicional"/>
+   <p:inputTextarea id="info_adicional"  value="#{ordenesEstudiosSimples.infoAdicional}" maxlength="300"/>
+   <p:message for="info_adicional"/>
+</div>
+   <h:inputHidden id="estatus" name="status" value="#{ordenesEstudiosSimples.estatus}" />
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{ordenesEstudiosSimples.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ordenesEstudiosSimples.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="tipo_orden" name="tipo_orden"  value="#{ordenesEstudiosSimples.tipoOrden}" />
+
+</p:panel>
+
+   <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true" onclick="PF('OrdenSimpleDialog').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" update="panelCreate OrdenesSimplesFormReadOnly" action="#{ordenesSimplesForm.insertaOrdenSimple}"  oncomplete="handleGuardarRequest(xhr, status, args)" />
+     </div>
+  </div>
+  
+   </p:dialog>
+</h:form>
+
+<h:form id="OrdenesSimplesFormUpdate">
+<p:dialog id="ordenSimpleUpdate-dialog" widgetVar="OrdenSimpleUpdateDialog" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Actualizar Orden Simple">
+
+<p:panel id="panelUpdate">
+ <div class="ui-g ui-fluid">
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel value="Nombre Paciente" for="numero_paciente" /> 
+   <p:selectOneMenu id="numero_paciente" filter="true" filterMatchMode="contains" required="true" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.numeroPaciente}" >
+  <f:selectItem itemLabel="seleccione" itemValue="" /> 
+  <f:selectItems value="#{adminHelper.selectPacientesItems}"  />
+  <p:ajax event="change" update=":OrdenesSimplesFormUpdate:edad :OrdenesSimplesFormUpdate:fecha_de_nacimiento" listener="#{ordenesSimplesForm.handlePacienteChangeUpd}"/>
+ </p:selectOneMenu>
+ <p:message for="numero_paciente"/>
+ </div>
+ <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="edad" value="Edad"/>
+  <p:inputText id="edad" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.edad}" readonly="true"/>
+  <p:message for="edad"/>
+ </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="fecha_de_nacimiento" value="Fecha de Nacimiento"/>
+  <p:inputText id="fecha_de_nacimiento" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.utilFechaNacimientoPaciente}" readonly="true">
+  <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+  </p:inputText>
+  <p:message for="fecha_de_nacimiento"/>
+  </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+   <p:outputLabel value="Nombre Doctor" for="numero_doctor" /> 
+   <p:selectOneMenu id="numero_doctor" filter="true" filterMatchMode="contains" required="true" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.numeroDoctor}" >
+   <f:selectItem itemLabel="seleccione" itemValue="" /> 
+   <f:selectItems value="#{adminHelper.selectDoctoresItems}"  />
+   </p:selectOneMenu>
+   <p:message for="numero_doctor"/>
+ </div>
+</div>
+ <div class="ui-g ui-fluid">
+ 
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  		<p:outputLabel value="Nombre Estudio" for="numero_estudio" /> 
+  		<p:selectOneMenu id="numero_estudio" filter="true" filterMatchMode="contains" required="true" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.numeroEstudio}" >
+  		<f:selectItem itemLabel="seleccione" itemValue="" /> 
+  		<f:selectItems value="#{adminHelper.selectEstudiosItems}"/>
+  		<p:ajax event="change" update="costo_estudio" listener="#{ordenesSimplesForm.handleEstudioChangeUpd}"/>
+ 		</p:selectOneMenu>
+ 		<p:message for="numero_estudio"/>
+  	</div>
+	<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  		<p:outputLabel for="costo_estudio" value="Costo de Estudio"/>
+  		<p:inputText id="costo_estudio" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.costoEstudio}" readonly="true">
+  		</p:inputText>
+  		<p:message for="costo_estudio"/>
+  	</div>
+ 
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Nombre Ubicacion" for="numero_ubicacion" /> 
+	<p:selectOneMenu id="numero_ubicacion" filter="true" filterMatchMode="contains" required="true" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.numeroUbicacion}" >
+	<f:selectItem itemLabel="seleccione" itemValue="" /> 
+	<f:selectItems value="#{adminHelper.selectUbicacionesItems}"  />
+	</p:selectOneMenu>
+	<p:message for="numero_ubicacion"/>
+  </div>
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Tipo de Pago" for="tipo_pago" /> 
+    <p:selectOneMenu id="tipo_pago"  required="true" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.tipoPago}" >
+	<f:selectItem itemLabel="seleccione" itemValue="" /> 
+	<f:selectItems value="#{adminHelper.selectTipoPagoItems}"  />
+	</p:selectOneMenu>
+	<p:message for="tipo_pago"/>
+  </div>
+ </div>
+ 
+ <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+      <p:outputLabel value="Hora Inicial" for="horaInicialOrden" />
+      <pe:timePicker id="horaInicialOrden" style="width: 100%; margin-top: 5px;" mode="popup"  required="true" widgetVar="horaInicialOrdenWidget" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.utilHoraInicialOrden}" startHours="8" endHours="20" minHour="8" maxHour="20"/>
+      <p:message for="horaInicialOrden"/>
+   </div>
+   <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+      <p:outputLabel value="Hora Final" for="horaFinalOrden" />
+      <pe:timePicker id="horaFinalOrden" style="width: 100%; margin-top: 5px;" mode="popup"  required="true" widgetVar="horaFinalOrdenWidget" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.utilHoraFinalOrden}" startHours="8" endHours="20" minHour="8" maxHour="20"/>
+      <p:message for="horaFinalOrden"/>
+   </div>
+   <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+    <p:outputLabel value="Requiere Factura" for="requiere_factura" />
+    <p:selectBooleanCheckbox id="requiere_factura" style="width: 100%; margin-top: 5px;" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.requiereFactura}" />
+    <p:message for="requiere_factura"/>
+  </div>
+ </div>
+ 
+<div class="ui-g ui-fluid">
+<p:outputLabel for="info_adicional" value="Info Adicional"/>
+   <p:inputTextarea id="info_adicional"  value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.infoAdicional}" maxlength="300"/>
+   <p:message for="info_adicional"/>
+</div>
+   <h:inputHidden id="estatus" name="status" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.estatus}" />
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="tipo_orden" name="tipo_orden"  value="#{ordenesSimplesForm.ordenesEstudiosSimplesSelected.tipoOrden}" />
+
+</p:panel>
+
+   <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="true" immediate="true" onclick="PF('OrdenSimpleUpdateDialog').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" update="panelUpdate OrdenesSimplesFormReadOnly" action="#{ordenesSimplesForm.actualizaOrdenSimple}"  oncomplete="handleActualizarRequest(xhr, status, args)" />
+     </div>
+  </div>
+  
+
+</p:dialog>
+</h:form>
+
+<h:form id="OrdenesSimplesFormDelete">
+<p:dialog id="ordenSimpleDelete-dialog" widgetVar="OrdenSimpleDeleteDialog" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Borrar Orden Simple">
+  
+  <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            <p:outputLabel value="La orden se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('OrdenSimpleDeleteDialog').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":OrdenesSimplesFormReadOnly"
+                                         actionListener="#{ordenesSimplesForm.delete}"
+                                         onstart="PF('OrdenSimpleDeleteDialog').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+  
+  
+</p:dialog>
+</h:form>
+
+</ui:define>
+</ui:composition>

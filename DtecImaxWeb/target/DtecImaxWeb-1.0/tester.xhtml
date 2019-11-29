@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<h:form id="TesterForm">   
+
+    <p:growl id="growl" life="2000" />
+
+    <p:commandLink id="pantallaUbicaciones" action="#{testerForm.ubicacionesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaUbicaciones" value="Pantalla Ubicaciones" />
+    </p:commandLink>      
+
+    <p:commandLink id="pantallaPermisos" action="#{testerForm.permisosAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaPermisos" value="Pantalla Permisos" />
+    </p:commandLink>    
+    
+    <p:commandLink id="pantallaPermisosUsuarios" action="#{testerForm.permisosUsuariosAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaPermisosUsuarios" value="Pantalla Permisos Usuarios" />
+    </p:commandLink>    
+    
+    <p:commandLink id="pantallaUsuarios" action="#{testerForm.usuariosAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaUsuarios" value="Pantalla Usuarios" />
+    </p:commandLink>      
+    
+    <p:commandLink id="pantallaCitas" action="#{testerForm.citasAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaCitas" value="Pantalla Citas" />
+    </p:commandLink>      
+
+    <p:commandLink id="pantallaPacientes" action="#{testerForm.pacientesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaPacientes" value="Pantalla Pacientes" />
+    </p:commandLink>
+    
+    <p:commandLink id="pantallaDoctores" action="#{testerForm.doctoresAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaDoctores" value="Pantalla Doctores" />
+    </p:commandLink>
+    <br/>
+    <p:commandLink id="pantallaAlergiasPacientes" action="#{testerForm.alergiasPacientesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaAlergiasPacientes" value="Pantalla Alergias Pacientes" />
+    </p:commandLink>
+    <p:commandLink id="pantallaOrdenesSimples" action="#{testerForm.ordenesSimplesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaOrdenesSimples" value="Pantalla Ordenes Simples" />
+    </p:commandLink>
+     <p:commandLink id="pantallaOrdenesEspeciales" action="#{testerForm.ordenesEspecialesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaOrdenesEspeciales" value="Pantalla Ordenes Especiales" />
+    </p:commandLink>
+    
+    <p:commandLink id="pantallaOrdenesContrastados" action="#{testerForm.ordenesContrastadosAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaOrdenesContrastados" value="Pantalla Ordenes Constrastados" />
+    </p:commandLink>
+    
+    <p:commandLink id="pantallaOrdenesDentales" action="#{testerForm.ordenesDentalesAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaOrdenesDentales" value="Pantalla Ordenes Dentales" />
+    </p:commandLink>
+    <br/>
+      <p:commandLink id="pantallaEstudios" action="#{testerForm.estudiosAction}" style="margin-right:20px;" ajax="false">
+        <p:outputLabel for="pantallaEstudios" value="Pantalla Estudios" />
+    </p:commandLink>
+</h:form>
+
+
+</ui:define>
+
+</ui:composition>

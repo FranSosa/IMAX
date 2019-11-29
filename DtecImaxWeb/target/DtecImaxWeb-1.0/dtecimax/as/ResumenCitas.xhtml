@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                template="/WEB-INF/template/template.xhtml">
+<ui:define name="content">
+<style type="text/css">
+    .value {
+        font-weight: bold;
+    }
+</style>
+<h:form id="fechaFiltroForm">
+    <p:growl id="msgs" showDetail="true" />
+    <h:panelGrid columns="2" cellpadding="5">
+   <p:outputLabel for="fechaFiltro" value="Fecha:" />
+     <p:datePicker id="fechaFiltro" locale="es" value="#{resumenCitasForm.fechaFiltro}">
+         <p:ajax event="dateSelect" listener="#{resumenCitasForm.onDateSelect}" update="resumenCitaTab" />
+    </p:datePicker>
+ </h:panelGrid>
+</h:form>
+
+  <p:dataTable id="resumenCitaTab" var="resumenCita" value="#{resumenCitasForm.listResumenCitas}">
+  <p:column headerText="Hora">
+    <h:outputText value="#{resumenCita.hora1}" />
+  </p:column>
+  <p:column headerText="Estudios y Ultrasonidos">
+    <h:outputText value="#{resumenCita.estudiosUltrasonidos}" />
+  </p:column>
+  <p:column headerText="Doctor y/o">
+    <h:outputText value="#{resumenCita.doctoryo1}" />
+  </p:column>
+  <p:column headerText="Hora">
+    <h:outputText value="#{resumenCita.hora2}" />
+  </p:column>
+  <p:column headerText="Mamografia y Densito">
+  <h:outputText value="#{resumenCita.mamografiaDensito}" />
+  </p:column>
+  <p:column headerText="Doctor y/o">
+   <h:outputText value="#{resumenCita.doctoryo2}" />
+  </p:column>
+  <p:column headerText="Hora">
+    <h:outputText value="#{resumenCita.hora3}" />
+  </p:column>
+  <p:column headerText="Resonancia y TAC">
+   <h:outputText value="#{resumenCita.resonanciaTac}" />
+  </p:column>
+  <p:column headerText="Doctor y/o">
+   <h:outputText value="#{resumenCita.doctoryo3}" />
+  </p:column>
+
+
+  </p:dataTable>
+</ui:define>
+</ui:composition>

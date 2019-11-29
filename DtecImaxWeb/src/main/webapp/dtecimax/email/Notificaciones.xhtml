@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<h:form id="FiltrosForm">
+  <p:panel id="FiltrosPanel">
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12 ui-md-3 ui-lg-3">
+        <p:outputLabel for="fechaDesde" value="Fecha Desde" />
+        <p:calendar id="fechaDesde"  pattern="dd/MM/yyyy" mask="true" required="true" locale="es" navigator="true" value="#{notificacionesForm.fechaDesde}"/>
+        <p:message for="fechaDesde"/>
+      </div>
+       <div class="ui-g-12 ui-md-3 ui-lg-3">
+         <p:outputLabel for="fechaHasta" value="Fecha Hasta" />
+         <p:calendar id="fechaHasta" pattern="dd/MM/yyyy" mask="true" required="true" locale="es" navigator="true" value="#{notificacionesForm.fechaHasta}"/>
+         <p:message for="fechaHasta"/>
+      </div>
+    </div>  
+  </p:panel>
+   <div class="ui-g">
+      <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: left;">
+       <p:commandButton value="Consultar" update="FiltrosPanel ReadOnlyForm" action="#{notificacionesForm.filtraPorFechas()}" oncomplete="$('.ui-message-error').delay(1800).fadeOut(500);"/>
+      </div>
+   </div>
+</h:form>
+
+<h:form id="ReadOnlyForm">
+<p:dataTable var="ntf" value="#{notificacionesForm.listNotificacionesV}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+    <p:column headerText="Paciente">
+      <h:outputText value="#{ntf.nombrePaciente}" />
+    </p:column>
+    <p:column headerText="Correo Electronico">
+      <h:outputText value="#{ntf.correoElectronico}" />
+    </p:column>
+     <p:column headerText="Asunto">
+      <h:outputText value="#{ntf.vcharSubject}" />
+    </p:column>
+    <p:column headerText="Mensaje">
+      <h:outputText value="#{ntf.vcharBody}" />
+    </p:column>
+     <p:column headerText="Fecha Envio">
+      <h:outputText value="#{ntf.fechaCreacion}" />
+    </p:column>
+</p:dataTable>
+</h:form>
+
+</ui:define>
+
+</ui:composition>

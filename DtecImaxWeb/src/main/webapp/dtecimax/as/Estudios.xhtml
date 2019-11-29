@@ -1,0 +1,274 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('EstudioDialog').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('EstudioDialog').hide();
+            /*$('#RegistrarEstudioBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.updatedIn) {
+            PF('EstudioDialogUpdate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('EstudioDialogUpdate').hide();
+            /*$('#RegistrarEstudioBtn').fadeOut();*/
+        }
+    }
+    
+</script>
+
+<h:form id="MessagesForm">
+  <p:messages id="messages" showDetail="true" closable="true">
+        <p:autoUpdate />
+    </p:messages>
+</h:form>
+
+<h:form id="SearchForm">
+ <f:passThroughAttribute name="autocomplete" value="off"/>
+  <p:fieldset legend="Buscar Estudios" toggleable="true" toggleSpeed="500" style="margin-bottom:20px" collapsed="true" >
+  <p:ajax event="toggle" />
+  <p:panel id="SearchPanel" >
+      <div class="ui-g ui-fluid">
+       <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="nombre_estudio" value="Nombre Estudio:" />
+         <p:inputText id="nombre_estudio"  style="width: 100%; margin-top: 5px;" value="#{estudiosForm.searchNomEstu}" maxlength="50" />
+         <p:message for="nombre_estudio"/>
+       </div>
+       </div>
+       
+       <div class="ui-g">
+       <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+        <p:commandButton value="Cancelar">
+         <p:ajax update="SearchPanel" resetValues="true" />
+        </p:commandButton>
+        <p:commandButton value="Consultar" update="EstudiosFormReadOnly"  actionListener="#{estudiosForm.search}" style="margin-left: 10px;"/>
+       </div>
+      </div>
+       
+   </p:panel>
+  </p:fieldset>
+  </h:form>     
+
+<h:form id="EstudiosFormReadOnly">
+    <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+                            <p:dataTable var="estudio" value="#{estudiosForm.listEstudios}" emptyMessage="Sin resultados" paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+							<f:facet name="header">Estudios</f:facet>
+                                 <p:column headerText="Nom. Estudio">
+                                  <h:outputText value="#{estudio.nombreEstudio}" />
+                                </p:column>
+                                 <p:column headerText="Tipo estudio">
+                                  <h:outputText value="#{estudio.tipoEstudio}" />
+                                </p:column>
+                                 <p:column headerText="Costo Estudio">
+                                  <h:outputText value="#{estudio.costoEstudio}" />
+                                </p:column>
+                                <p:column headerText="Realiza Estudio">
+                                  <h:outputText value="#{estudio.realizaEstudio}" />
+                                </p:column>
+                                <p:column headerText="Color Estudio">
+                                  <p:colorPicker  value="#{estudio.colorEstudio}" disabled="true" />
+                                </p:column>
+                               <p:column headerText="Opciones:">
+                                  <p:commandButton icon="fa fa-edit" update="EstudiosFormUpdate EstudiosFormReadOnly" oncomplete="PF('EstudioDialogUpdate').show();" ajax="true"  style="margin-left: 10px;" actionListener="#{estudiosForm.selectForUpdate(estudio)}"/>
+								 <p:commandButton icon="fa fa-trash" update=":EstudiosFormDelete:eliminar-estudio-dialog" oncomplete="PF('eliminarEstudioDlg').show();" ajax="true"  style="margin-left: 10px;" actionListener="#{estudiosForm.selectForDelete(estudio)}"/>
+							   </p:column>
+							</p:dataTable>	
+								
+                            </div>
+                            </div>
+                            
+                            <h:panelGroup id="estudios-registrar">
+                             <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarEstudiosBtn" value="Registrar Estudio" icon="fa fa-plus" onclick="PF('EstudioDialog').show();" />
+                                </div>
+                             </div>
+                            </h:panelGroup>
+    </div>
+    </div>
+    </div>
+</h:form>
+
+<h:form id="EstudiosFormCreate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="estudio-dialog" widgetVar="EstudioDialog" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Registrar Estudio">
+  <p:panel id="PanelCreate">
+<div class="ui-g ui-fluid">
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="nombre_estudio" value="Nombre Estudio:" />
+         <p:inputText id="nombre_estudio"  style="width: 100%; margin-top: 5px;" required="true" value="#{estudios.nombreEstudio}" maxlength="50" />
+         <p:message for="nombre_estudio"/>
+     </div>
+      <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="costo_estudio" value="Costo del Estudio:" />
+         <p:inputText id="costo_estudio"  style="width: 100%; margin-top: 5px;" required="true" value="#{estudios.costoEstudio}" maxlength="50" />
+         <p:message for="costo_estudio"/>
+     </div>
+       <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+          <p:outputLabel  for="tipo_estudio" value="Tipo de Estudio:" />
+          <p:selectOneMenu id="tipo_estudio" filter="true" filterMatchMode="contains" style="width: 100%; margin-top: 5px;" required="true" value="#{estudios.tipoEstudio}" >
+          <f:selectItem itemLabel="seleccione" itemValue="" /> 
+          <f:selectItems value="#{adminHelper.selectTipoEstudiosItems}"  />
+          </p:selectOneMenu>
+          <p:message for="tipo_estudio"/>
+     </div>
+      <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="realiza_estudio" value="Realiza Estudio:" />
+         <p:inputText id="realiza_estudio"  style="width: 100%; margin-top: 5px;" required="true" value="#{estudios.realizaEstudio}" maxlength="50" />
+         <p:message for="realiza_estudio"/>
+     </div>
+      <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+		<p:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" />
+		<p:selectOneMenu id="numero_ubicacion" style="width: 100%; margin-top: 5px;" filter="true" filterMatchMode="contains" required="true" value="#{estudios.numeroUbicacion}">
+ 		<f:selectItem itemLabel="seleccione" itemValue="" /> 
+ 		<f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+		</p:selectOneMenu>
+		<p:message for="numero_ubicacion"/>
+	</div>
+	 <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+	  <p:outputLabel for="color_estudio"  value="Color Estudio" />
+	  <p:colorPicker id="color_estudio" style="width: 100%; margin-top: 5px;" value="#{estudios.colorEstudio}"/>
+	 </div>
+    </div>
+<div class="ui-g ui-fluid">
+<p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{estudios.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+</div>
+
+   <h:inputHidden id="estatus" name="status" value="#{estudios.estatus}" />
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{estudios.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{estudios.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+
+	<div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+           <p:commandButton value="Cancelar" ajax="false" immediate="true"  onclick="PF('EstudioDialog').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" update="PanelCreate EstudiosFormReadOnly" action="#{estudiosForm.insertaEstudios()}" oncomplete="handleGuardarRequest(xhr, status, args)"/>
+           </div>
+    </div>
+    </p:panel>
+ </p:dialog>
+</h:form>
+
+<h:form id="EstudiosFormUpdate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+ 	<p:dialog id="estudio-dialog-update" widgetVar="EstudioDialogUpdate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Modificar Estudio">
+		<p:panel id="panelUpdate">
+		<div class="ui-g ui-fluid">
+ 		<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  			<p:outputLabel for="nombre_estudio" value="Nombre Estudio:" /> 
+ 			<p:inputText id="nombre_estudio" name="nombre_estudio" style="width: 100%; margin-top: 5px;" value="#{estudiosForm.estudiosSelected.nombreEstudio}" required="true" maxlength="50"  />
+  			<p:message for="nombre_estudio" />
+ 		</div>
+ 			<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  				<p:outputLabel for="costo_estudio" value="Costo Estudio:" /> 
+  				<p:inputText id="costo_estudio" name="costo_estudio" style="width: 100%; margin-top: 5px;" value="#{estudiosForm.estudiosSelected.costoEstudio}" required="true" maxlength="50"  />
+  				<p:message for="costo_estudio" />
+ 		  </div>
+ 		  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  			<p:outputLabel for="tipo_estudio" value="Tipo Estudio:" /> 
+  			<p:selectOneMenu id="tipo_estudio" filter="true" filterMatchMode="contains" style="width: 100%; margin-top: 5px;" required="true" value="#{estudiosForm.estudiosSelected.tipoEstudio}" >
+            <f:selectItem itemLabel="seleccione" itemValue="" /> 
+            <f:selectItems value="#{adminHelper.selectTipoEstudiosItems}"  />
+            </p:selectOneMenu>
+  			<p:message for="tipo_estudio" />
+ 		</div>
+      	<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="realiza_estudio" value="Realiza Estudio:" />
+         <p:inputText id="realiza_estudio"  style="width: 100%; margin-top: 5px;" required="true" value="#{estudiosForm.estudiosSelected.realizaEstudio}" maxlength="50" />
+         <p:message for="realiza_estudio"/>
+     </div>
+	</div>
+	<div class="ui-g ui-fluid">
+ 			<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  			<p:outputLabel for="estatusUpd" value="Estatus"/>
+  			<p:selectBooleanCheckbox id="estatusUpd" style="width: 100%; margin-top: 5px;" value="#{estudiosForm.estudiosSelected.estatus}" />
+  			<p:message for="estatusUpd" />
+ 			</div>
+ 			<div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+			  <p:outputLabel for="color_estudio"  value="Color Estudio" />
+			  <p:colorPicker id="color_estudio" style="width: 100%; margin-top: 5px;" value="#{estudiosForm.estudiosSelected.colorEstudio}"/>
+			 </div>
+		</div>
+
+<div class="ui-g ui-fluid">
+<p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{estudiosForm.estudiosSelected.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+</div>
+
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{estudiosForm.estudiosSelected.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{estudiosForm.estudiosSelected.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+  
+</p:panel>
+
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="true" immediate="true" onclick="PF('EstudioDialogUpdate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" ajax="true" update="panelUpdate EstudiosFormReadOnly" action="#{estudiosForm.actualizaEstudio}"  oncomplete="handleActualizarRequest(xhr, status, args)" />
+     </div>
+  </div>
+
+</p:dialog>
+</h:form>
+
+<h:form id="EstudiosFormDelete">
+            <p:dialog id="eliminar-estudio-dialog" widgetVar="eliminarEstudioDlg" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" header="Eliminar estudio">
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            <p:outputLabel value="El estudio #{estudiosForm.estudiosSelected.nombreEstudio} se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('eliminarEstudioDlg').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":EstudiosFormReadOnly"
+                                         actionListener="#{estudiosForm.delete}"
+                                         onstart="PF('eliminarEstudioDlg').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+
+            </p:dialog>
+
+</h:form>
+
+</ui:define>
+</ui:composition>

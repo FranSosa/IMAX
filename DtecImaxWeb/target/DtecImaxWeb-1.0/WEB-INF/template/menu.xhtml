@@ -1,0 +1,60 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pa="http://primefaces.org/apollo"
+    xmlns:security="http://www.springframework.org/security/tags">
+ 
+ <div class="layout-menu-container">
+        <div class="nano">
+            <div class="nano-content menu-scroll-content">
+
+                <div class="layout-menu-title">MENU</div>
+
+                <h:form id="menu-form" enctype="multipart/form-data">
+                 <pa:menu>
+                    <p:menuitem id="apl_inicio" value="Inicio" icon="fa fa-home" outcome="home"/>
+                  
+                    <p:submenu id="apl_administracion" label="Administración" icon="fa fa-gear">
+                      <p:menuitem id="apl_global_ubicaciones" value="Ubicaciones" icon="fa fa-suitcase" outcome="global-ubicaciones" />
+                      <p:menuitem id="apl_adm_usuarios" value="Usuarios" icon="fa fa-group" outcome="admin-usuarios" />
+                      <p:menuitem id="apl_adm_permisos" value="Permisos" icon="fa fa-lock" outcome="admin-permisos" />
+                      <p:menuitem id="apl_adm_permisos_usuarios" value="Permisos Usuarios" icon="fa fa-lock" outcome="admin-permisos-usuarios" />
+                      <p:menuitem id="apl_adm_tablas_utilitarias" value="Tablas Utilitarias Valores" icon="fa fa-gears" outcome="admin-tablas-utilitarias" />
+                    </p:submenu>
+                  
+                    <p:submenu id="apl_ar" label="Hospital" icon="fa fa-hospital-o">
+                     <p:menuitem id="apl_ar_alergias_pacientes" value="Alergias Pacientes" icon="fa fa-ambulance" outcome="ar-alergias-pacientes" />
+                     <p:menuitem id="apl_ar_pacientes" value="Pacientes" icon="fa fa-group" outcome="ar-pacientes" />
+                     <p:menuitem id="apl_hr_doctores" value="Doctores" icon="fa fa-user-md" outcome="hr-doctores" />
+                     <p:menuitem id="apl_hr_doctores_referentes" value="Doctores Referentes" icon="fa fa-user-md" outcome="hr-doctores-referentes" />
+                    </p:submenu>
+                    
+                     <p:submenu id="apl_as" label="Citas y Ordenes" icon="fa fa-pencil-square-o">
+                        <p:menuitem id="apl_as_citas" value="Citas" icon="fa fa-stethoscope" outcome="as-citas"/>
+                        <p:menuitem id="apl_as_resumen_citas" value="Resumen Citas" icon="fa fa-stethoscope" outcome="as-resumen-citas"/>
+                        <p:menuitem id="apl_as_estudios" value="Estudios" icon="fa fa-flask" outcome="as-estudios"/>
+                        <p:menuitem id="apl_as_ordenes_simples" value="Ordenes Simples" icon="fa fa-flask" outcome="as-ordenes-simples"/>
+                        <p:menuitem id="apl_as_ordenes_especiales" value="Ordenes Especiales" icon="fa fa-flask" outcome="as-ordenes-especiales"/>
+                        <p:menuitem id="apl_as_ordenes_contrastados" value="Ordenes Contrastados" icon="fa fa-flask" outcome="as-ordenes-contrastados"/>
+                        <p:menuitem id="apl_as_ordenes_dentales" value="Ordenes Dentales" icon="fa fa-flask" outcome="as-ordenes-dentales"/>
+                     </p:submenu>
+                     
+                      <p:submenu id="apl_email_ntfs" label="Notificaciones" icon="fa fa-envelope">
+                         <p:menuitem id="apl_email_ntfs_out" value="Enviados" icon="fa fa-sign-out" outcome="email-notificaciones"/>
+                      </p:submenu>
+                  
+                      <p:submenu id="apl_charts" label="Estadisticas" icon="fa fa-bar-chart">
+                       <p:menuitem id="apl_chart_estudios_agendados" value="Estudios Agendados" icon="fa fa-line-chart" outcome="chart-estudios-agendados" />
+                       <p:menuitem id="apl_chart_citas_agendadas" value="Citas Agendadas" icon="fa fa-line-chart" outcome="chart-citas-agendadas" />
+                      </p:submenu>
+                      
+                  </pa:menu>      
+                  
+                </h:form>
+                </div>
+        </div>
+ </div>    
+</ui:composition>

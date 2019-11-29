@@ -1,0 +1,915 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>HolaMundo JSF</title>
+    </h:head>
+    <h:body>
+        <h:form id="UbicacionForm">
+            <table>
+                <tr>
+                    <td><h:outputLabel for="nombre_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:inputText id="nombre_ubicacion" name="nombre_ubicacion" value="#{ubicaciones.nombreUbicacion}" required="true" />
+                    <h:message for="nombre_ubicacion" style="color:red;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="domicilio_ubicacion" value="Domicilio Ubicacion:" /></td>
+                    <td>
+                    <h:inputText id="domicilio_ubicacion" name="domicilio_ubicacion" value="#{ubicaciones.domicilioUbicacion}" required="true" />
+                    <h:message for="domicilio_ubicacion" style="color:red;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="correo_ubicacion" value="Correo Ubicacion:" /></td>
+                    <td>
+                    <h:inputText id="correo_ubicacion" name="correo_ubicacion"  value="#{ubicaciones.correoUbicacion}" required="true" />
+                     <h:message for="correo_ubicacion" style="color:red;"/>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="telefono_ubicacion" value="Telefono Ubicacion:" /></td>
+                    <td><h:inputText id="telefono_ubicacion" name="telefono_ubicacion" value="#{ubicaciones.telefonoUbicacion}" required="true" >
+                       <f:validateLength minimum = "8" maximum = "10" />
+                       </h:inputText>
+                       <h:message for="telefono_ubicacion" style="color:red;"/>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="horario_ubicacion" value="Horario Ubicacion:" /></td>
+                    <td>
+                    <h:inputText id="horario_ubicacion" name="horario_ubicacion" value="#{ubicaciones.horarioUbicacion}" required="true" />
+                     <h:message for="horario_ubicacion" style="color:red;"/>
+                    </td>
+                </tr>
+                <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{ubicaciones.estatus}"/></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion"  value="#{ubicaciones.utilFechaCreacion}" required="true" > <f:convertDateTime type="date" pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ubicaciones.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{ubicaciones.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+            </table>
+            <h:commandButton action="#{indexForm.insertaUbicacion}" value="Insertar Ubicacion" />
+        </h:form>
+        
+           <h:form id="UsuariosForm">
+             <table>
+                <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{usuarios.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="clave_usuario" value="Clave Usuario:" /></td>
+                    <td><h:inputText id="clave_usuario" name="clave_usuario" value="#{usuarios.claveUsuario}"  required="true" />
+                    </td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="nombre_usuario" value="Nombre Usuario:" /></td>
+                    <td><h:inputText id="nombre_usuario" name="nombre_usuario" value="#{usuarios.nombreUsuario}"  required="true" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="apellido_paterno" value="Apellido Paterno:" /></td>
+                    <td><h:inputText id="apellido_paterno" name="apellido_paterno" value="#{usuarios.apellidoPaternoUsuario}"  required="true" >
+                    </h:inputText>
+                    </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="apellido_materno" value="Apellido Materno:" /></td>
+                    <td><h:inputText id="apellido_materno" name="apellido_materno" value="#{usuarios.apellidoMaternoUsuario}"  required="true" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="contrasena_usuario" value="Contrasenia Usuario:" /></td>
+                    <td><h:inputText id="contrasena_usuario" name="contrasena_usuario" value="#{usuarios.contrasenaUsuario}"  required="true" /></td>
+                </tr>
+                  <!-- Comienza status fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{usuarios.estatus}"/></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{usuarios.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{usuarios.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{usuarios.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+            </table>
+             <h:commandButton action="#{indexForm.insertUsuarios}" value="Insertar Usuario" />
+           </h:form>
+            
+            <h:form id="UsuariosPermisosForm">
+             <table>
+                 <tr>
+                    <td><h:outputLabel for="numero_usuario" value="Nombre Usuario:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_usuario" required="true" value="#{permisosUsuarios.numeroUsuario}" onchange="this.form.submit()"  valueChangeListener="#{indexForm.valueChangeUsuario}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUsuariosItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>
+                <tr>
+                 <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                 <td><h:inputText id="numero_ubicacion" name="numero_ubicacion" value="#{permisosUsuarios.nombreUbicacion}" readonly="true" required="true"/></td>
+                </tr>
+              <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{permisosUsuarios.estatus}"/></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{permisosUsuarios.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{permisosUsuarios.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{permisosUsuarios.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+             </table>
+             <h:commandButton action="#{indexForm.insertPermisosUsuarios}" value="Insertar Permisos Usuario" />
+            </h:form>
+            
+            <h:form id="PacientesForm">
+                <table>
+                 <tr>
+                    <td><h:outputLabel for="nombre_paciente" value="Nombre Paciente" /></td>
+                    <td><h:inputText id="nombre_paciente" name="nombre_paciente" value="#{pacientes.nombrePaciente}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="apellido_paterno_paciente" value="Apellido Paterno Paciente" /></td>
+                    <td><h:inputText id="apellido_paterno_paciente" name="apellido_paterno_paciente" value="#{pacientes.apellidoPaternoPaciente}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="apellido_materno_paciente" value="Apellido Materno Paciente" /></td>
+                    <td><h:inputText id="apellido_materno_paciente" name="apellido_materno_paciente" value="#{pacientes.apellidoMaternoPaciente}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_nacimiento_paciente" value="Fecha Nacimiento Paciente:" /></td>
+                    <td><h:inputText id="fecha_nacimiento_paciente" name="fecha_nacimiento_paciente" type="date" value="#{pacientes.utilFechaNacimientoPaciente}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="celular_paciente" value="Celular Paciente" /></td>
+                    <td><h:inputText id="celular_paciente" name="celular_paciente" value="#{pacientes.celularPaciente}" required="true" >
+                    <f:validateLength minimum = "8" maximum = "10" />
+                    </h:inputText>
+                    </td>
+                </tr>
+                  <tr>
+                    <td><h:outputLabel for="correo_paciente" value="Correo Paciente" /></td>
+                    <td><h:inputText id="correo_paciente" name="correo_paciente" value="#{pacientes.correoPaciente}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="curp_paciente" value="CURP Paciente" /></td>
+                    <td><h:inputText id="curp_paciente" name="curp_paciente" value="#{pacientes.curpPaciente}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="domicilio_paciente" value="Domicilio Paciente" /></td>
+                    <td><h:inputText id="domicilio_paciente" name="domicilio_paciente" value="#{pacientes.domicilioPaciente}" required="true" /></td>
+                </tr>
+                <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{pacientes.estatus}"/></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{pacientes.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{pacientes.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{pacientes.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+                </table>
+                  <h:commandButton action="#{indexForm.insertPacientes}" value="Insertar Pacientes" />
+            </h:form>
+            
+            
+              <h:form id="DoctoresForm">
+                <table>
+                <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{doctores.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="nombre_doctor" value="Nombre Doctor" /></td>
+                    <td><h:inputText id="nombre_doctor" name="nombre_doctor" value="#{doctores.nombreDoctor}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="apellido_paterno_doctor" value="Apellido Paterno Doctor" /></td>
+                    <td><h:inputText id="apellido_paterno_doctor" name="apellido_paterno_doctor" value="#{doctores.apellidoPaternoDoctor}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="apellido_materno_doctor" value="Apellido Materno Doctor" /></td>
+                    <td><h:inputText id="apellido_materno_doctor" name="apellido_materno_doctor" value="#{doctores.apellidoMaternoDoctor}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_nacimiento_doctor" value="Fecha Nacimiento Doctor:" /></td>
+                    <td><h:inputText id="fecha_nacimiento_doctor" name="fecha_nacimiento_doctor" type="date" value="#{doctores.utilFechaNacimientoDoctor}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="cedula_doctor" value="Cedula Doctor;" /></td>
+                    <td><h:inputText id="cedula_doctor" name="cedula_doctor" value="#{doctores.cedulaDoctor}" required="true" >
+                    <f:validateLength minimum = "8" maximum = "20" />
+                    </h:inputText>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="celular_doctor" value="Celular Doctor" /></td>
+                    <td><h:inputText id="celular_doctor" name="celular_doctor" value="#{doctores.celularDoctor}" required="true" >
+                    <f:validateLength minimum = "8" maximum = "10" />
+                    </h:inputText>
+                    </td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="curp_doctor" value="CURP Doctor" /></td>
+                    <td><h:inputText id="curp_doctor" name="curp_doctor" value="#{doctores.curpDoctor}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="domicilio_doctor" value="Domicilio Doctor" /></td>
+                    <td><h:inputText id="domicilio_doctor" name="domicilio_doctor" value="#{doctores.domicilioDoctor}" required="true" /></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="correo_doctor" value="Correo Doctor" /></td>
+                    <td><h:inputText id="correo_doctor" name="correo_doctor" value="#{doctores.correoDoctor}" required="true" /></td>
+                </tr>
+                <tr>
+                <td><h:outputLabel for="tipo_doctor" value="Tipo Doctor" /></td>
+                <td>
+                <h:selectOneMenu id="tipo_doctor" value="#{doctores.tipoDoctor}" required="true">
+                 <f:selectItem itemValue=""  itemLabel="seleccione"  /> 
+                 <f:selectItem itemValue="1" itemLabel="Doctor"/>
+                 <f:selectItem itemValue="2" itemLabel="Tecnico"/> 
+                </h:selectOneMenu>
+                </td>
+                </tr>
+                <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{doctores.estatus}"/></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{doctores.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{doctores.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{doctores.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+                </table>
+                  <h:commandButton action="#{indexForm.insertDoctores}" value="Insertar Doctores" />
+            </h:form>
+            
+              <h:form id="EstudiosForm">
+                <table>
+                <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{estudios.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="nombre_estudios" value="Nombre Estudio:" /></td>
+                    <td><h:inputText id="nombre_estudios" name="nombre_estudios" value="#{estudios.nombreEstudio}" required="true" /></td>
+                </tr>
+                <tr>
+                <td><h:outputLabel for="tipo_estudio" value="Tipo Estudio:" /></td>
+                <td>
+                <h:selectOneMenu id="tipo_estudio" value="#{estudios.tipoEstudio}" required="true">
+                 <f:selectItem itemValue=""  itemLabel="seleccione"  /> 
+                 <f:selectItem itemValue="1" itemLabel="Estudio1"/>
+                 <f:selectItem itemValue="2" itemLabel="Estudio2"/> 
+                 <f:selectItem itemValue="3" itemLabel="Estudio3"/> 
+                </h:selectOneMenu>
+                </td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="costo_estudio" value="Costo Estudio:" /></td>
+                    <td><h:inputText id="costo_estudio" name="costo_estudio" value="#{estudios.costoEstudio}" required="true" >
+                        <f:convertNumber type="number" minFractionDigits = "2" />
+                        <f:validateLongRange minimum="0" />  
+                    </h:inputText></td>
+                </tr>
+                 <tr>
+                <td><h:outputLabel for="realiza_estudio" value="Realiza Estudio:" /></td>
+                <td>
+                <h:selectOneMenu id="realiza_estudio" value="#{estudios.realizaEstudio}" required="true">
+                 <f:selectItem itemValue=""  itemLabel="seleccione"  /> 
+                 <f:selectItem itemValue="1" itemLabel="Doctor"/>
+                 <f:selectItem itemValue="2" itemLabel="Tecnico"/> 
+                 <f:selectItem itemValue="3" itemLabel="Dentista"/> 
+                </h:selectOneMenu>
+                </td>
+                </tr>
+                <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+                <tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{estudios.estatus}"/></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                    <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{estudios.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                    <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{estudios.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{estudios.comentarios}" required="true" /></td>
+                </tr>
+                 <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  -->
+                </table>
+                <h:commandButton action="#{indexForm.insertEstudios}" value="Insertar Estudios" />
+              </h:form>
+            
+            <h:form id="ConfiguracionesForm">
+        	<table>
+        	<tr>
+                <td><h:outputLabel for="valor_1" value="Valor 1:" /></td>
+                <td><h:inputText id="valor_1" name="valor_1" value="#{configuraciones.valor_1}" required="true"/></td>
+            </tr>
+            <tr>
+                 <td><h:outputLabel for="valor_2" value="Valor 2:" /></td>
+                <td><h:inputText id="valor_2" name="valor_2" value="#{configuraciones.valor_2}" required="true"/></td>
+           </tr>
+            <tr>
+                 <td><h:outputLabel for="valor_3" value="Valor 3:" /></td>
+                <td><h:inputText id="valor_3" name="valor_3" value="#{configuraciones.valor_3}" required="true"/></td>
+           </tr>
+           <tr>
+                 <td><h:outputLabel for="valor_4" value="Valor 4:" /></td>
+                <td><h:inputText id="valor_4" name="valor_4" value="#{configuraciones.valor_4}" required="true"/></td>
+           </tr>
+            <tr>
+                 <td><h:outputLabel for="valor_5" value="Valor 5:" /></td>
+                <td><h:inputText id="valor_5" name="valor_5" value="#{configuraciones.valor_5}" required="true"/></td>
+           </tr>
+            <tr>
+                 <td><h:outputLabel for="valor_6" value="Valor 6:" /></td>
+                <td><h:inputText id="valor_6" name="valor_6" value="#{configuraciones.valor_6}" required="true"/></td>
+           </tr>
+            <tr>
+                <td><h:outputLabel for="valor_7" value="Valor 7:" /></td>
+                <td><h:inputText id="valor_7" name="valor_7" value="#{configuraciones.valor_7}" required="true"/></td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="valor_8" value="Valor 8:" /></td>
+                <td><h:inputText id="valor_8" name="valor_8" value="#{configuraciones.valor_8}" required="true"/></td>
+            </tr>
+             <tr>
+        	 	<td><h:outputLabel for="valor_9" value="Valor_9:" /></td>
+                <td><h:inputText id="valor_9" name="valor_9" value="#{configuraciones.valor_9}" required="true"/></td>
+             </tr>
+        	 <tr>
+        	 	<td><h:outputLabel for="valor_10" value="Valor_10:" /></td>
+                <td><h:inputText id="valor_10" name="valor_10" value="#{configuraciones.valor_10}" required="true"/></td>
+             </tr>
+        	 <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+        	<tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{configuraciones.estatus}" required="true"/></td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                 <td><h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{configuraciones.utilFechaCreacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" /></h:inputText></td>
+             </tr>
+              <tr>
+                 <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                 <td><h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{configuraciones.utilFechaUltimaActualizacion}" required="true" > <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  /></h:inputText></td>
+             </tr>
+                <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{configuraciones.comentarios}" required="true" /></td>
+                </tr>
+                <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  --> 
+            </table>
+            <h:commandButton action="#{indexForm.insertConfiguraciones}" value="Insertar Configuraciones" />
+        	</h:form>
+        	
+        	<h:form id="CitasForm">
+        	  <table>
+        	  <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{citas.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_paciente" value="Numero Paciente:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_paciente" required="true" value="#{citas.numeroPaciente}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectPacientesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_paciente" style="color:red;"/>
+                   </td>                     
+                </tr> 
+               <tr>
+                    <td><h:outputLabel for="numero_doctor" value="Nombre Doctor:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_doctor" required="true" value="#{citas.numeroDoctor}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectDoctoresItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_doctor" style="color:red;"/>
+                   </td>                     
+                </tr> 
+               <tr>
+                    <td><h:outputLabel for="numero_estudio" value="Nombre Estudio:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_estudio" required="true" value="#{citas.numeroEstudio}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectEstudiosItems}" />
+                    </h:selectOneMenu>
+                   </td>                     
+                </tr>  
+              <tr>
+                 <td><h:outputLabel for="fecha_cita" value="Fecha Cita:" /></td>
+                 <td><h:inputText id="fecha_cita" name="fecha_cita" type="date" value="#{citas.utilFechaCita}" required="true" > 
+                 <f:convertDateTime pattern = "yyyy-MM-dd"  locale="es" />
+                 </h:inputText>
+                 </td>
+             </tr>
+             <tr>
+               <td><h:outputLabel for="hora_inicial_cita" value="Hora Inicial Cita:" /></td>
+               <td>
+               <h:inputText id="hora_inicial_cita" name="hora_inicial_cita" value="#{citas.utilHoraInicialCita}" required="true">
+               <f:convertDateTime type="time" pattern="HH:mm"/>
+               </h:inputText>
+               <h:message for="hora_inicial_cita" style="color:red;"/>
+               </td>
+             </tr>
+             <tr>
+               <td><h:outputLabel for="hora_final_cita" value="Hora Final Cita:" /></td>
+               <td>
+               <h:inputText id="hora_final_cita" name="hora_final_cita" value="#{citas.utilHoraFinalCita}" required="true">
+               <f:convertDateTime type="time"  pattern="HH:mm"/>
+               </h:inputText>
+               <h:message for="hora_final_cita" style="color:red;"/>
+               </td>
+             </tr>
+                	 <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+        	<tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td><h:selectBooleanCheckbox id="estatus" name="status" value="#{citas.estatus}" required="true"/></td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{citas.utilFechaCreacion}" required="true" > 
+                 <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+                 </h:inputText>
+                 </td>
+             </tr>
+              <tr>
+                 <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{citas.utilFechaUltimaActualizacion}" required="true" > 
+                 <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  />
+                 </h:inputText>
+                 </td>
+             </tr>
+                <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{citas.comentarios}" /></td>
+                </tr>
+                <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  --> 
+        	  </table>
+        	   <h:commandButton action="#{indexForm.insertCitas}" value="Insertar Citas" />
+        	</h:form>
+            
+            <h:form id="AlergiasPacientesForm">
+                <table>
+                 <tr>
+                  <td><h:outputLabel for="nombreAlergia" value="Nombre Alergia:"/></td>
+                  <td>
+                  <h:inputText id="nombreAlergia" name="nombreAlergia" value="#{alergiasPacientes.nombreAlergia}" required="true" />
+                   <h:message for="nombreAlergia" style="color:red;"/>
+                  </td>
+                 </tr>
+                 <tr>
+                  <td><h:outputLabel for="descripcionAlergia" value="Descripcion Alergia:"/></td>
+                  <td>
+                  <h:inputText id="descripcionAlergia" name="descripcionAlergia" value="#{alergiasPacientes.descripcion}" />
+                  <h:message for="descripcionAlergia" style="color:red;"/></td>
+                 </tr>
+                </table>
+                <h:commandButton action="#{indexForm.insertAlergiasPacientes}" value="Insertar Alergias Pacientes" />
+            </h:form>
+            
+            <h:form id="OrdenesEstudiosForm">
+              <table>
+               <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{ordenesEstudios.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_ubicacion" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_cita" value="Numero Cita:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_cita" required="true" value="#{ordenesEstudios.numeroCita}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectCitasItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_cita" style="color:red;"/>
+                   </td>                     
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="numero_paciente" value="Numero Paciente:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_paciente" required="true" value="#{ordenesEstudios.numeroPaciente}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectPacientesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_paciente" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_doctor" value="Nombre Doctor:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_doctor" required="true" value="#{ordenesEstudios.numeroDoctor}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectDoctoresItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_doctor" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_estudio" value="Nombre Estudio:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_estudio" required="true" value="#{ordenesEstudios.numeroEstudio}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectEstudiosItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_estudio" style="color:red;"/>
+                   </td>                     
+                </tr> 
+                 <tr>
+                    <td><h:outputLabel for="tipo_orden" value="Tipo Orden:" /></td>
+                    <td>
+                    <h:selectOneMenu id="tipo_orden" required="true" value="#{ordenesEstudios.tipoOrden}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectTipoOrdenItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="tipo_orden" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="tipo_pago" value="Tipo Pago:" /></td>
+                    <td>
+                    <h:selectOneMenu id="tipo_pago" required="true" value="#{ordenesEstudios.tipoPago}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectTipoPagoItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="tipo_pago" style="color:red;"/>
+                   </td>                     
+                </tr>   
+                 <tr>
+                    <td><h:outputLabel for="numero_alergia" value="Alergia:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_alergia" required="true" value="#{ordenesEstudios.numeroAlergia}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectAlergiasPacientesItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_alergia" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                 <td><h:outputLabel for="requiere_factura" value="Requiere Factura:" /></td>
+                 <td><h:selectBooleanCheckbox id="requiere_factura" name="status" value="#{ordenesEstudios.requiereFactura}" required="true"/></td>
+               </tr>
+                    	 <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+        	<tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td>
+                <h:selectBooleanCheckbox id="estatus" name="status" value="#{ordenesEstudios.estatus}" required="true"/>
+                 <h:message for="estatus" style="color:red;"/>
+                </td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{ordenesEstudios.utilFechaCreacion}" required="true" > 
+                 <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+                 </h:inputText>
+                 <h:message for="fecha_creacion" style="color:red;"/>
+                 </td>
+             </tr>
+              <tr>
+                 <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{ordenesEstudios.utilFechaUltimaActualizacion}" required="true" > 
+                 <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  />
+                 </h:inputText>
+                 <h:message for="fecha_ultima_actualizacion" style="color:red;"/>
+                 </td>
+             </tr>
+                <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  --> 
+                <tr>
+                    <td><h:outputLabel for="indicaciones_doctor" value="Indicaciones Doctor:" /></td>
+                    <td><h:inputText id="indicaciones_doctor" name="indicaciones_doctor" value="#{ordenesEstudios.indicacionesDoctor}" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="info_adicional" value="Info Adicional:" /></td>
+                    <td><h:inputText id="info_adicional" name="info_adicional" value="#{ordenesEstudios.infoAdicional}" /></td>
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="ubicacion_paciente" value="Ubicacion Paciente:" /></td>
+                    <td>
+                    <h:selectOneMenu id="ubicacion_paciente" required="true" value="#{ordenesEstudios.ubicacionPaciente}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionPacienteItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="ubicacion_paciente" style="color:red;"/>
+                   </td>                     
+                </tr>
+              </table>
+              <h:commandButton action="#{indexForm.insertOrdenesEstudios}" value="Insertar Ordenes Estudios Contrastados" />
+            </h:form>
+           
+            <h:form id="interpretacionesForm">
+              <table>
+              <tr>
+                    <td><h:outputLabel for="numero_orden" value="Numero Orden:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_orden" required="true" value="#{interpretaciones.numeroOrden}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectOrdenesEstudiosItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_orden" style="color:red;"/>
+                   </td>                     
+                </tr>
+               <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{interpretaciones.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_ubicacion" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_cita" value="Numero Cita:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_cita" required="true" value="#{interpretaciones.numeroCita}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectCitasItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_cita" style="color:red;"/>
+                   </td>                     
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="numero_paciente" value="Numero Paciente:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_paciente" required="true" value="#{interpretaciones.numeroPaciente}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectPacientesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_paciente" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_doctor" value="Nombre Doctor:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_doctor" required="true" value="#{interpretaciones.numeroDoctor}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectDoctoresItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_doctor" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_estudio" value="Nombre Estudio:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_estudio" required="true" value="#{interpretaciones.numeroEstudio}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectEstudiosItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_estudio" style="color:red;"/>
+                   </td>                     
+                </tr> 
+                 <tr>
+                    <td><h:outputLabel for="tipo_orden" value="Tipo Orden:" /></td>
+                    <td>
+                    <h:selectOneMenu id="tipo_orden" required="true" value="#{interpretaciones.tipoOrden}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectTipoOrdenItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="tipo_orden" style="color:red;"/>
+                   </td>                     
+                </tr>
+                    	 <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+        	<tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td>
+                <h:selectBooleanCheckbox id="estatus" name="status" value="#{interpretaciones.estatus}" required="true"/>
+                 <h:message for="estatus" style="color:red;"/>
+                </td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{interpretaciones.utilFechaCreacion}" required="true" > 
+                 <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+                 </h:inputText>
+                 <h:message for="fecha_creacion" style="color:red;"/>
+                 </td>
+             </tr>
+              <tr>
+                 <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{interpretaciones.utilFechaUltimaActualizacion}" required="true" > 
+                 <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  />
+                 </h:inputText>
+                 <h:message for="fecha_ultima_actualizacion" style="color:red;"/>
+                 </td>
+             </tr>
+                <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  --> 
+                <tr>
+                    <td><h:outputLabel for="interpretacion" value="Interpretaciones:" /></td>
+                    <td><h:inputText id="interpretacion" name="interpretacion" value="#{interpretaciones.interpretacion}" /></td>
+                </tr>
+              </table>
+              <h:commandButton action="#{indexForm.insertInterpretaciones}" value="Insertar Interpretaciones" />
+            </h:form>
+           
+           
+            <h:form id="historialClinicoForm">
+              <table>
+              <tr>
+                    <td><h:outputLabel for="numero_interpretacion" value="Interpretacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_interpretacion" required="true" value="#{historialClinico.numeroInterpretacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectInterpretacionesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_interpretacion" style="color:red;"/>
+                   </td>                     
+                </tr>
+              <tr>
+                    <td><h:outputLabel for="numero_orden" value="Numero Orden:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_orden" required="true" value="#{historialClinico.numeroOrden}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectOrdenesEstudiosItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_orden" style="color:red;"/>
+                   </td>                     
+                </tr>
+               <tr>
+                    <td><h:outputLabel for="numero_ubicacion" value="Nombre Ubicacion:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_ubicacion" required="true" value="#{historialClinico.numeroUbicacion}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectUbicacionesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_ubicacion" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_cita" value="Numero Cita:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_cita" required="true" value="#{historialClinico.numeroCita}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectCitasItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_cita" style="color:red;"/>
+                   </td>                     
+                </tr>
+                 <tr>
+                    <td><h:outputLabel for="numero_paciente" value="Numero Paciente:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_paciente" required="true" value="#{historialClinico.numeroPaciente}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectPacientesItems}" />
+                    </h:selectOneMenu>
+                     <h:message for="numero_paciente" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_doctor" value="Nombre Doctor:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_doctor" required="true" value="#{historialClinico.numeroDoctor}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectDoctoresItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_doctor" style="color:red;"/>
+                   </td>                     
+                </tr>
+                <tr>
+                    <td><h:outputLabel for="numero_estudio" value="Nombre Estudio:" /></td>
+                    <td>
+                    <h:selectOneMenu id="numero_estudio" required="true" value="#{historialClinico.numeroEstudio}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectEstudiosItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="numero_estudio" style="color:red;"/>
+                   </td>                     
+                </tr> 
+                 <tr>
+                    <td><h:outputLabel for="tipo_orden" value="Tipo Orden:" /></td>
+                    <td>
+                    <h:selectOneMenu id="tipo_orden" required="true" value="#{historialClinico.tipoOrden}">
+                    <f:selectItem itemLabel="seleccione" itemValue="" /> 
+                    <f:selectItems value="#{adminHelper.selectTipoOrdenItems}" />
+                    </h:selectOneMenu>
+                    <h:message for="tipo_orden" style="color:red;"/>
+                   </td>                     
+                </tr>
+                    	 <!-- Comienza estatus, fecha creacion, ultima actualizacion, comentarios  -->
+        	<tr>
+                <td><h:outputLabel for="estatus" value="Estatus:" /></td>
+                <td>
+                <h:selectBooleanCheckbox id="estatus" name="status" value="#{historialClinico.estatus}" required="true"/>
+                 <h:message for="estatus" style="color:red;"/>
+                </td>
+            </tr>
+             <tr>
+                 <td><h:outputLabel for="fecha_creacion" value="Fecha Creacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_creacion" name="fecha_creacion" type="date" value="#{historialClinico.utilFechaCreacion}" required="true" > 
+                 <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+                 </h:inputText>
+                 <h:message for="fecha_creacion" style="color:red;"/>
+                 </td>
+             </tr>
+              <tr>
+                 <td><h:outputLabel for="fecha_ultima_actualizacion" value="Fecha Ultima Actualizacion:" /></td>
+                 <td>
+                 <h:inputText id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{historialClinico.utilFechaUltimaActualizacion}" required="true" > 
+                 <f:convertDateTime pattern = "yyyy-MM-dd" locale="es"  />
+                 </h:inputText>
+                 <h:message for="fecha_ultima_actualizacion" style="color:red;"/>
+                 </td>
+             </tr>
+                <!-- Finaliza estatus fecha creacion, ultima actualizacion, comentarios  --> 
+                <tr>
+                    <td><h:outputLabel for="comentarios" value="Comentarios:" /></td>
+                    <td><h:inputText id="comentarios" name="comentarios" value="#{historialClinico.comentarios}" /></td>
+                </tr>
+              </table>
+              <h:commandButton action="#{indexForm.insertHistorialClinico}" value="Insertar Historial Clinico" />
+            </h:form>
+            
+               
+               
+    </h:body>
+</html>

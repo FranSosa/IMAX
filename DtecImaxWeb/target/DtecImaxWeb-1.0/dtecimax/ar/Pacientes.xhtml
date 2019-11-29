@@ -1,0 +1,339 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template/template.xhtml">
+
+<ui:define name="content">
+
+<style type="text/css">   
+  .ui-datatable {
+      margin-bottom:20px;
+  }
+ 
+  .ui-datatable-frozenlayout-left {
+      width:20%;
+  }
+ 
+  .ui-datatable-frozenlayout-right {
+      width:80%;
+  }
+ </style>
+      
+
+<script type="text/javascript">
+    function handleGuardarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('PacientesDialogCreate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('PacientesDialogCreate').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+
+    function handleActualizarRequest(xhr, status, args) {
+        if(args.validationFailed || !args.updatedIn) {
+            PF('PacientesDialogUpdate').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('PacientesDialogUpdate').hide();
+            /*$('#RegistrarUbicacionBtn').fadeOut();*/
+        }
+    }
+    
+</script>
+
+<h:form id="MessagesForm">
+  <p:messages id="messages" showDetail="true" closable="true">
+        <p:autoUpdate />
+    </p:messages>
+</h:form>
+
+<h:form id="SearchForm">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+ <p:fieldset legend="Buscar Paciente" toggleable="true" toggleSpeed="500" style="margin-bottom:20px" collapsed="true" >
+  <p:ajax event="toggle" />
+  <p:panel id="SearchPanel" >
+  
+    <div class="ui-g ui-fluid">
+    <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="nombre_paciente" value="Nombre:" />
+         <p:inputText id="nombre_paciente"  style="width: 100%; margin-top: 5px;" value="#{pacientesForm.searchNomPaci}" maxlength="50" />
+         <p:message for="nombre_paciente"/>
+    </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="apellido_paterno_paciente" value="Apellido Paterno:" />
+         <p:inputText id="apellido_paterno_paciente"  style="width: 100%; margin-top: 5px;" value="#{pacientesForm.searchApellPatPaci}" maxlength="50" />
+         <p:message for="apellido_paterno_paciente"/>
+    </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="apellido_materno_paciente" value="Apellido Materno:" />
+         <p:inputText id="apellido_materno_paciente"  style="width: 100%; margin-top: 5px;" value="#{pacientesForm.searchApellMatPaci}" maxlength="50" />
+         <p:message for="apellido_materno_paciente"/>
+    </div>
+    </div>
+    
+     <div class="ui-g">
+       <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+        <p:commandButton value="Cancelar">
+         <p:ajax update="SearchPanel" resetValues="true" />
+        </p:commandButton>
+        <p:commandButton value="Consultar" update="PacientesFormReadOnly"  actionListener="#{pacientesForm.search}" style="margin-left: 10px;"/>
+       </div>
+     </div>
+    
+  </p:panel>
+ </p:fieldset>
+</h:form>
+
+
+<h:form id="PacientesFormReadOnly">
+                            
+ <div class="ui-g">
+    <div class="ui-g-12 ui-lg-12">
+    <div class="card no-margin">
+                   
+                            <div class="ui-g">
+                            <div class="ui-g-12 ui-lg-12">
+	                           <p:dataTable var="paciente" value="#{pacientesForm.listPacientes}" emptyMessage="Sin resultados" tableStyle="width:auto"  paginator="true" rows="10" paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
+							  <f:facet name="header">
+						       Pacientes
+						      </f:facet>
+						     <p:column headerText="Nombre" style="text-overflow: ellipsis; white-space: nowrap;">
+						       <h:outputText value="#{paciente.nombrePaciente}" />
+						     </p:column> 
+						      <p:column headerText="Apellido Paterno">
+						       <h:outputText value="#{paciente.apellidoPaternoPaciente}" />
+						     </p:column> 
+						      <p:column headerText="Apellido Materno">
+						       <h:outputText value="#{paciente.apellidoMaternoPaciente}" />
+						     </p:column> 
+						      <p:column headerText="Fecha Nacimiento">
+						       <h:outputText value="#{paciente.fechaNacimientoPaciente}" >
+						        <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+						       </h:outputText>
+						     </p:column> 
+						       <p:column headerText="Celular">
+						       <h:outputText value="#{paciente.celularPaciente}" />
+						     </p:column> 
+						      <p:column headerText="Correo">
+						       <h:outputText value="#{paciente.correoPaciente}" />
+						     </p:column> 
+						      <p:column headerText="CURP">
+						       <h:outputText value="#{paciente.curpPaciente}" />
+						     </p:column> 
+						      <p:column headerText="Domicilio">
+						       <h:outputText value="#{paciente.domicilioPaciente}" />
+						     </p:column> 
+						      <p:column headerText="Opciones:" style="text-overflow: ellipsis; white-space: nowrap;">
+						       <p:commandButton icon="fa fa-edit" update="PacientesFormUpdate PacientesFormReadOnly" oncomplete="PF('PacientesDialogUpdate').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{pacientesForm.selectForUpdate(paciente)}"/>
+						       <p:commandButton icon="fa fa-trash" update=":PacientesFormDelete:eliminar-paciente-dialog" oncomplete="PF('eliminarPacienteDlg').show();" ajax="true"  style="margin-left: 15px;" actionListener="#{pacientesForm.selectForDelete(paciente)}"/>                      
+						     </p:column>
+							</p:dataTable>
+                            </div>
+                            </div>
+                            <h:panelGroup id="pacientes-registrar">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                                    <p:commandButton id="RegistrarPacienteBtn" value="Registrar Paciente" icon="fa fa-plus" onclick="PF('PacientesDialogCreate').show();" />
+                                </div>
+                            </div>
+                            </h:panelGroup>
+    </div>
+    </div>
+    </div>
+</h:form>
+
+<h:form id="PacientesFormCreate">
+<f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="pacientes-dialog-create" widgetVar="PacientesDialogCreate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Registrar Paciente">
+<p:panel id="PanelCreate">
+ <div class="ui-g ui-fluid">
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="nombre_paciente" value="Nombre:" />
+         <p:inputText id="nombre_paciente"  style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.nombrePaciente}" maxlength="50" />
+         <p:message for="nombre_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+         <p:outputLabel for="apellido_paterno_paciente" value="Apellido Paterno:" />
+         <p:inputText  id="apellido_paterno_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.apellidoPaternoPaciente}" maxlength="50" />
+         <p:message for="apellido_paterno_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+         <p:outputLabel for="apellido_materno_paciente" value="Apellido Materno:" />
+         <p:inputText id="apellido_materno_paciente"  style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.apellidoMaternoPaciente}" maxlength="50" />
+         <p:message for="apellido_materno_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+        <p:outputLabel for="fecha_nacimiento_paciente" value="Fecha Nacimiento:" />
+        <p:calendar id="fecha_nacimiento_paciente"  locale="es" navigator="true" yearRange="c-100:c+1" pattern="yyyy-MM-dd" required="true" value="#{pacientes.utilFechaNacimientoPaciente}" /> 
+        <p:message for="fecha_nacimiento_paciente"/>
+     </div>
+ </div>
+  <div class="ui-g ui-fluid">
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="celular_paciente" value="Celular:"/>
+     <p:inputNumber id="celular_paciente" style="width: 100%; margin-top: 5px;" required="true"  value="#{pacientes.celularPaciente}" maxlength="10"/>
+     <p:message for="celular_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="correo_paciente" value="Correo:"/>
+     <p:inputText id="correo_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.correoPaciente}" maxlength="50"/>
+     <p:message for="correo_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="curp_paciente" value="CURP:"/>
+     <p:inputText id="curp_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.curpPaciente}" maxlength="25"/>
+     <p:message for="curp_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="domicilio_paciente" value="Domicilio:"/>
+     <p:inputText id="domicilio_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientes.domicilioPaciente}" maxlength="50"/>
+     <p:message for="domicilio_paciente"/>
+     </div>
+  </div>
+
+  <div class="ui-g ui-fluid">
+   <p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{pacientes.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+  </div>
+  
+    <h:inputHidden id="estatus" name="status" value="#{pacientes.estatus}" />
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{pacientes.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{pacientes.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+
+</p:panel>
+  
+    <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="false" immediate="true" onclick="PF('PacientesDialogCreate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Guardar" action="#{pacientesForm.insertPacientes}"  update="PanelCreate PacientesFormReadOnly" oncomplete="handleGuardarRequest(xhr, status, args)"/>
+     </div>
+  </div>
+ </p:dialog> 
+</h:form>
+
+<h:form id="PacientesFormUpdate">
+ <f:passThroughAttribute name="autocomplete" value="off"/>
+<p:dialog id="pacientes-dialog-update" widgetVar="PacientesDialogUpdate" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" width="1000" header="Modificar Paciente">
+<p:panel id="PanelUPdate">
+ <div class="ui-g ui-fluid">
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+         <p:outputLabel  for="nombre_paciente" value="Nombre:" />
+         <p:inputText id="nombre_paciente"  style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.nombrePaciente}" maxlength="50" />
+         <p:message for="nombre_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+         <p:outputLabel for="apellido_paterno_paciente" value="Apellido Paterno:" />
+         <p:inputText  id="apellido_paterno_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.apellidoPaternoPaciente}" maxlength="50" />
+         <p:message for="apellido_paterno_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+         <p:outputLabel for="apellido_materno_paciente" value="Apellido Materno:" />
+         <p:inputText id="apellido_materno_paciente"  style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.apellidoMaternoPaciente}" maxlength="50" />
+         <p:message for="apellido_materno_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3">
+        <p:outputLabel for="fecha_nacimiento_paciente" value="Fecha Nacimiento:" />
+        <p:calendar id="fecha_nacimiento_paciente"  locale="es" navigator="true" yearRange="c-100:c+1" pattern="yyyy-MM-dd" required="true" value="#{pacientesForm.pacientesSelected.utilFechaNacimientoPaciente}" /> 
+        <p:message for="fecha_nacimiento_paciente"/>
+     </div>
+ </div>
+  <div class="ui-g ui-fluid">
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="celular_paciente" value="Celular:"/>
+     <p:inputNumber id="celular_paciente" style="width: 100%; margin-top: 5px;" required="true"  value="#{pacientesForm.pacientesSelected.celularPaciente}" maxlength="10"/>
+     <p:message for="celular_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="correo_paciente" value="Correo:"/>
+     <p:inputText id="correo_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.correoPaciente}" maxlength="50"/>
+     <p:message for="correo_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="curp_paciente" value="CURP:"/>
+     <p:inputText id="curp_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.curpPaciente}" maxlength="25"/>
+     <p:message for="curp_paciente"/>
+     </div>
+     <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+     <p:outputLabel for="domicilio_paciente" value="Domicilio:"/>
+     <p:inputText id="domicilio_paciente" style="width: 100%; margin-top: 5px;" required="true" value="#{pacientesForm.pacientesSelected.domicilioPaciente}" maxlength="50"/>
+     <p:message for="domicilio_paciente"/>
+     </div>
+  </div>
+  
+ <div class="ui-g ui-fluid">
+  <div class="ui-g-12 ui-lg-3" style="margin-bottom: 5px;">
+  <p:outputLabel for="estatusUpd" value="Estatus"/>
+  <p:selectBooleanCheckbox id="estatusUpd" style="width: 100%; margin-top: 5px;" value="#{pacientesForm.pacientesSelected.estatus}" />
+  <p:message for="estatusUpd" />
+  </div> 
+ </div>
+  
+  <div class="ui-g ui-fluid">
+   <p:outputLabel for="comentarios" value="Comentarios:"/>
+   <p:inputTextarea id="comentarios"  value="#{pacientesForm.pacientesSelected.comentarios}" maxlength="200"/>
+   <p:message for="comentarios"/>
+  </div>
+  
+   <h:inputHidden id="fecha_creacion" name="fecha_creacion" type="date" value="#{pacientesForm.pacientesSelected.utilFechaCreacion}"> 
+   <f:convertDateTime type="date" pattern= "yyyy-MM-dd" />
+   </h:inputHidden>
+   <h:inputHidden id="fecha_ultima_actualizacion" name="fecha_ultima_actualizacion" type="date" value="#{pacientesForm.pacientesSelected.utilFechaUltimaActualizacion}" required="true" > 
+   <f:convertDateTime type="date" pattern = "yyyy-MM-dd" />
+   </h:inputHidden>
+
+</p:panel>
+  
+  <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+          <p:commandButton value="Cancelar" ajax="true" immediate="true" onclick="PF('PacientesFormUpdate').hide();" style="margin-right: 10px;"/>
+          <p:commandButton value="Actualizar" ajax="true" update="PanelUPdate PacientesFormReadOnly" action="#{pacientesForm.update()}"  oncomplete="handleActualizarRequest(xhr, status, args)" />
+     </div>
+  </div>
+ </p:dialog>
+</h:form>
+
+<h:form id="PacientesFormDelete">
+   
+            <p:dialog id="eliminar-paciente-dialog" widgetVar="eliminarPacienteDlg" modal="true" closable="true" closeOnEscape="true" draggable="false" resizable="false" header="Eliminar Usuario">
+
+                <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-lg-12">
+                        <h:panelGroup >
+                            <p:outputLabel value="El paciente #{pacientesForm.pacientesSelected.nombrePaciente} #{pacientesForm.pacientesSelected.apellidoPaternoPaciente} #{pacientesForm.pacientesSelected.apellidoMaternoPaciente} se eliminará de forma permanente. Considere que esta acción no se puede deshacer." />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <p:outputLabel value="¿Desea continuar?" />
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-12" style="text-align: right;">
+                        <p:commandButton value="Cancelar"
+                                       ajax="true"
+                                       immediate="true"
+                                       onclick="PF('eliminarPacienteDlg').hide();"/>
+                        <p:commandButton value="Eliminar"
+                                         ajax="false"
+                                         update=":PacientesFormReadOnly"
+                                         actionListener="#{pacientesForm.delete}"
+                                         onstart="PF('eliminarPacienteDlg').hide();"
+                                         style="margin-left: 10px;"/>
+                    </div>
+                </div>
+
+            </p:dialog>
+</h:form>
+
+</ui:define>
+
+</ui:composition>                
