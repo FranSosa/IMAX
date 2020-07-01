@@ -11,7 +11,7 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j.version>2.8.2</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <spring.security.version>4.2.0.RELEASE</spring.security.version>
     </properties>
     
